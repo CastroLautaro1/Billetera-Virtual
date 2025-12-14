@@ -1,12 +1,62 @@
 package com.cuenta_bancaria.cuenta.infra.data.adapter;
 
+import com.cuenta_bancaria.cuenta.domain.Cuenta;
+import com.cuenta_bancaria.cuenta.domain.port.CuentaRepositoryPort;
 import com.cuenta_bancaria.cuenta.infra.data.entity.CuentaEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.cuenta_bancaria.cuenta.infra.data.mapper.CuentaMapper;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-public interface CuentaJpaAdapter extends JpaRepository<CuentaEntity, Long> {
-    boolean existsByIdUser(Long idUser);
-    Optional<CuentaEntity> findByIdUser(Long idUser);
+public class CuentaJpaAdapter implements CuentaRepositoryPort {
+
+    private CuentaJpaRepository jpaRepository;
+
+    public CuentaJpaAdapter(CuentaJpaRepository jpaRepository) {
+        this.jpaRepository = jpaRepository;
+    }
+
+    @Override
+    public Cuenta save(Cuenta c) {
+        CuentaEntity entity = CuentaMapper.toEntity(c);
+        CuentaEntity savedEntity = jpaRepository.save(entity);
+        return CuentaMapper.toDomain(savedEntity);
+    }
+
+    @Override
+    public Optional<Cuenta> getById(Long id) {
+        return jpaRepository.findById(id)
+                .map(CuentaMapper::toDomain);
+    }
+
+    @Override
+    public Optional<Cuenta> getByIdUser(Long idUser) {
+        return jpaRepository.findByIdUser(idUser)
+                .map(CuentaMapper::toDomain);
+    }
+
+    @Override
+    public List<Cuenta> findAll() {
+        List<CuentaEntity> entities = jpaRepository.findAll();
+
+        return entities.stream()
+                        .map(CuentaMapper::toDomain)
+                        .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        jpaRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return jpaRepository.existsById(id);
+    }
+
+    @Override
+    public boolean existsByIdUser(Long idUser) {
+        return jpaRepository.existsByIdUser(idUser);
+    }
 }
