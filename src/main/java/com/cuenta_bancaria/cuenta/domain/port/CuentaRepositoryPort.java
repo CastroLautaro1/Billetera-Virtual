@@ -9,7 +9,9 @@ public interface CuentaRepositoryPort {
 
     Cuenta save(Cuenta c);
     Optional<Cuenta> getById(Long id);
+    Optional<Cuenta> getByIdUser(Long idUser);
     List<Cuenta> findAll();
     void deleteById(Long id);
     boolean existsById(Long id);
+    boolean existsByIdUser(Long idUser);
 }

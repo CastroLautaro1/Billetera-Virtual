@@ -14,6 +14,10 @@ public class Cuenta {
     private Long id;
     private Long idUser;
     private double monto;
-    private boolean estado;
+    private Estado estado;
+
+    public enum Estado {
+        ACTIVA, INHABILITADA
+    }
 
 }
