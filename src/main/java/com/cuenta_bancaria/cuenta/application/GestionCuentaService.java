@@ -84,14 +84,22 @@ public class GestionCuentaService implements CuentaServicePort{
     }
 
     @Override
-    public Cuenta actualizarCuenta(Cuenta c) {
+    public Cuenta actualizarCuenta(Long id, double monto) {
 
         // hacer validacion que verifique que el ID pertenece al Usuario logueado
 
-        if(c.getMonto() < 0) {
+        Cuenta cuenta = getCuentaById(id);
+
+        if (cuenta.getEstado().equals(Cuenta.Estado.INHABILITADA)) {
+            throw new RuntimeException("La cuenta se encuentra inhabilitada");
+        }
+
+        if(monto < 0) {
             throw new IllegalArgumentException("El monto de la cuenta no puede ser inferior a 0");
         }
 
-        return cuentaRepository.save(c);
+        cuenta.setMonto(monto);
+
+        return cuentaRepository.save(cuenta);
     }
 }
