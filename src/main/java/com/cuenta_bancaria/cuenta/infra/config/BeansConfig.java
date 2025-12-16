@@ -1,9 +1,9 @@
 package com.cuenta_bancaria.cuenta.infra.config;
 
-import com.cuenta_bancaria.cuenta.application.GestionCuentaService;
-import com.cuenta_bancaria.cuenta.domain.port.CuentaRepositoryPort;
-import com.cuenta_bancaria.cuenta.infra.data.adapter.CuentaJpaAdapter;
-import com.cuenta_bancaria.cuenta.infra.data.adapter.CuentaJpaRepository;
+import com.cuenta_bancaria.cuenta.application.AccountService;
+import com.cuenta_bancaria.cuenta.domain.port.AccountRepositoryPort;
+import com.cuenta_bancaria.cuenta.infra.data.adapter.AccountJpaAdapter;
+import com.cuenta_bancaria.cuenta.infra.data.adapter.AccountJpaRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,12 +11,12 @@ import org.springframework.context.annotation.Configuration;
 public class BeansConfig {
 
     @Bean
-    public CuentaRepositoryPort cuentaRepositoryPort(CuentaJpaRepository jpaRepository) {
-        return new CuentaJpaAdapter(jpaRepository);
+    public AccountRepositoryPort cuentaRepositoryPort(AccountJpaRepository jpaRepository) {
+        return new AccountJpaAdapter(jpaRepository);
     }
 
     @Bean
-    public GestionCuentaService gestionCuentaService(CuentaRepositoryPort repositoryPort) {
-        return new GestionCuentaService(repositoryPort);
+    public AccountService gestionCuentaService(AccountRepositoryPort repositoryPort) {
+        return new AccountService(repositoryPort);
     }
 }

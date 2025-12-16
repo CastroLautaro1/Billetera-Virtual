@@ -8,10 +8,10 @@
 		<version>3.4.12</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.cuenta-bancaria</groupId>
-	<artifactId>cuenta-bancaria</artifactId>
+	<groupId>com.account-bancaria</groupId>
+	<artifactId>account-bancaria</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>cuenta-bancaria</name>
+	<name>account-bancaria</name>
 	<description>Cuenta Bancaria con Arquitectura Hexagonal</description>
 	<url/>
 	<licenses>

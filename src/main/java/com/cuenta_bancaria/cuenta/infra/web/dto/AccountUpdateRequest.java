@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CuentaUpdateRequest {
-    private double monto;
+public class AccountUpdateRequest {
+    private double amount;
 }

@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CuentaRequest {
+public class AccountRequest {
 
     private Long idUser;
-    private double monto;
+    private double amount;
 
 }

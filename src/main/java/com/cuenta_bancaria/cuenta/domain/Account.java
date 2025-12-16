@@ -9,15 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Cuenta {
+public class Account {
 
     private Long id;
     private Long idUser;
-    private double monto;
-    private Estado estado;
-
-    public enum Estado {
-        ACTIVA, INHABILITADA
-    }
+    private double amount;
+    private boolean status;
 
 }
