@@ -9,7 +9,6 @@ public interface CuentaServicePort {
     Cuenta getCuentaById(Long id);
     Cuenta getCuentaByIdUser(Long idUser);
     List<Cuenta> getAll();
-    void eliminarCuenta(Long id);
     Cuenta actualizarCuenta(Long id, double monto);
-
+    void logicallyDeleteById(Long id);
 }

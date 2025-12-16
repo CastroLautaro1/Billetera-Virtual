@@ -4,6 +4,7 @@ import com.cuenta_bancaria.cuenta.domain.Cuenta;
 import com.cuenta_bancaria.cuenta.domain.port.CuentaRepositoryPort;
 import com.cuenta_bancaria.cuenta.infra.data.entity.CuentaEntity;
 import com.cuenta_bancaria.cuenta.infra.data.mapper.CuentaMapper;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,8 +47,9 @@ public class CuentaJpaAdapter implements CuentaRepositoryPort {
     }
 
     @Override
-    public void deleteById(Long id) {
-        jpaRepository.deleteById(id);
+    @Transactional
+    public void logicallyDeleteById(Long id) {
+        jpaRepository.logicallyDeleteById(id);
     }
 
     @Override

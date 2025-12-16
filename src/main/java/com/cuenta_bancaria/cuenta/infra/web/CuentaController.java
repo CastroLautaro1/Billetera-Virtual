@@ -53,7 +53,7 @@ public class CuentaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCuenta(@PathVariable  Long id) {
-        cuentaService.eliminarCuenta(id);
+        cuentaService.logicallyDeleteById(id);
         return ResponseEntity.noContent().build();
     }
 

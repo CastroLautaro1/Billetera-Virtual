@@ -72,11 +72,11 @@ public class GestionCuentaService implements CuentaServicePort{
     }
 
     @Override
-    public void eliminarCuenta(Long id) {
+    public void logicallyDeleteById(Long id) {
         boolean exists = cuentaRepository.existsById(id);
 
         if(exists) {
-            cuentaRepository.deleteById(id);
+            cuentaRepository.logicallyDeleteById(id);
         }
         else {
             throw new RuntimeException("El ID ingresado no coincide con ninguna cuenta");
