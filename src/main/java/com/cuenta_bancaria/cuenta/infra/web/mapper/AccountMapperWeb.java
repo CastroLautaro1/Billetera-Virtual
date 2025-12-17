@@ -7,8 +7,8 @@ public class AccountMapperWeb {
 
     public static Account toDomain(AccountRequest request) {
         return Account.builder()
-                .idUser(request.getIdUser())
-                .amount(request.getAmount())
+                .user_id(request.getIdUser())
+                .balance(request.getAmount())
                 .build();
 
     }

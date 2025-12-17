@@ -22,11 +22,11 @@ public class AccountService implements AccountServicePort {
 
         // agregar validacion que verifique si el idUser existe
 
-        if(accountRepository.existsByIdUser(account.getIdUser())) {
+        if(accountRepository.existsByIdUser(account.getUser_id())) {
             throw new RuntimeException("El ID de Usuario ya esta asociado a una cuenta, no puede tener otra");
         }
 
-        if(account.getAmount() < 0) {
+        if(account.getBalance() < 0) {
             throw new IllegalArgumentException("El monto de la cuenta no puede ser inferior a 0");
         }
 
@@ -97,7 +97,7 @@ public class AccountService implements AccountServicePort {
             throw new IllegalArgumentException("El monto de la cuenta no puede ser inferior a 0");
         }
 
-        account.setAmount(amount);
+        account.setBalance(amount);
 
         return accountRepository.save(account);
     }

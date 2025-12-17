@@ -8,8 +8,8 @@ public class AccountMapper {
     public static AccountEntity toEntity(Account domain) {
         return AccountEntity.builder()
                 .id(domain.getId())
-                .idUser(domain.getIdUser())
-                .amount(domain.getAmount())
+                .idUser(domain.getUser_id())
+                .amount(domain.getBalance())
                 .status(domain.isStatus())
                 .build();
     }
@@ -18,8 +18,8 @@ public class AccountMapper {
     public static Account toDomain(AccountEntity entity) {
         return Account.builder()
                 .id(entity.getId())
-                .idUser(entity.getIdUser())
-                .amount(entity.getAmount())
+                .user_id(entity.getIdUser())
+                .balance(entity.getAmount())
                 .status(entity.isStatus())
                 .build();
     }

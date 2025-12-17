@@ -9,6 +9,6 @@ public interface AccountServicePort {
     Account getAccountById(Long id);
     Account getAccountByIdUser(Long idUser);
     List<Account> getAll();
-    Account updateAccount(Long id, double amount);
+    Account updateAccount(Long id, double balance);
     void logicallyDeleteById(Long id);
 }
