@@ -9,10 +9,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface AccountJpaRepository extends JpaRepository<AccountEntity, Long> {
-    boolean existsByIdUser(Long idUser);
-    Optional<AccountEntity> findByIdUser(Long idUser);
+    boolean existsByUserId(Long userId);
+    Optional<AccountEntity> findByUserId(Long userId);
     @Modifying
-    @Query("update AccountEntity a set a.status = false  where a.id = :id")
+    @Query("update AccountEntity a set a.status = false where a.id = :id")
     void logicallyDeleteById(@Param("id") Long id);
 
 

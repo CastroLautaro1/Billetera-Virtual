@@ -19,8 +19,8 @@ public class AccountJpaAdapter implements AccountRepositoryPort {
     }
 
     @Override
-    public Account save(Account c) {
-        AccountEntity entity = AccountMapper.toEntity(c);
+    public Account save(Account account) {
+        AccountEntity entity = AccountMapper.toEntity(account);
         AccountEntity savedEntity = jpaRepository.save(entity);
         return AccountMapper.toDomain(savedEntity);
     }
@@ -32,8 +32,8 @@ public class AccountJpaAdapter implements AccountRepositoryPort {
     }
 
     @Override
-    public Optional<Account> getByIdUser(Long idUser) {
-        return jpaRepository.findByIdUser(idUser)
+    public Optional<Account> getByIdUser(Long userId) {
+        return jpaRepository.findByUserId(userId)
                 .map(AccountMapper::toDomain);
     }
 
@@ -58,7 +58,7 @@ public class AccountJpaAdapter implements AccountRepositoryPort {
     }
 
     @Override
-    public boolean existsByIdUser(Long idUser) {
-        return jpaRepository.existsByIdUser(idUser);
+    public boolean existsByIdUser(Long userId) {
+        return jpaRepository.existsByUserId(userId);
     }
 }

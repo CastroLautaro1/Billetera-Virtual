@@ -27,7 +27,7 @@ public class AccountService implements AccountServicePort {
         }
 
         if(account.getBalance() < 0) {
-            throw new IllegalArgumentException("El monto de la cuenta no puede ser inferior a 0");
+            throw new IllegalArgumentException("El saldo de la cuenta no puede ser inferior a 0");
         }
 
         account.setStatus(true);
@@ -83,7 +83,7 @@ public class AccountService implements AccountServicePort {
     }
 
     @Override
-    public Account updateAccount(Long id, double amount) {
+    public Account updateAccount(Long id, double balance) {
 
         // hacer validacion que verifique que el ID pertenece al Usuario logueado
 
@@ -93,11 +93,11 @@ public class AccountService implements AccountServicePort {
             throw new RuntimeException("La cuenta se encuentra inhabilitada");
         }
 
-        if(amount < 0) {
-            throw new IllegalArgumentException("El monto de la cuenta no puede ser inferior a 0");
+        if(balance < 0) {
+            throw new IllegalArgumentException("El saldo de la cuenta no puede ser inferior a 0");
         }
 
-        account.setBalance(amount);
+        account.setBalance(balance);
 
         return accountRepository.save(account);
     }

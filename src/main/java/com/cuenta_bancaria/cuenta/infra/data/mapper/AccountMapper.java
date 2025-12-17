@@ -18,8 +18,8 @@ public class AccountMapper {
     public static Account toDomain(AccountEntity entity) {
         return Account.builder()
                 .id(entity.getId())
-                .user_id(entity.getIdUser())
-                .balance(entity.getAmount())
+                .user_id(entity.getUser_id())
+                .balance(entity.getBalance())
                 .status(entity.isStatus())
                 .build();
     }

@@ -1,6 +1,5 @@
 package com.cuenta_bancaria.cuenta.infra.data.entity;
 
-import com.cuenta_bancaria.cuenta.domain.Account;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,13 +16,13 @@ public class AccountEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cuenta")
+    @Column(name = "account_id")
     private Long id;
 
-    @Column(name = "id_user")
-    private Long idUser;
+    @Column(name = "user_id")
+    private Long user_id;
 
-    private double amount;
+    private double balance;
 
     private boolean status;
 
