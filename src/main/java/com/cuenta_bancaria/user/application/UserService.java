@@ -1,30 +1,35 @@
 package com.cuenta_bancaria.user.application;
 
 import com.cuenta_bancaria.user.domain.User;
+import com.cuenta_bancaria.user.domain.port.AccountCreatorPort;
 import com.cuenta_bancaria.user.domain.port.UserRepositoryPort;
 import com.cuenta_bancaria.user.domain.port.UserServicePort;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService implements UserServicePort {
 
     private final UserRepositoryPort userRepository;
-
-    public UserService(UserRepositoryPort userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final AccountCreatorPort accountCreator;
 
     @Override
+    @Transactional
     public User createUser(User user) {
 
         // agregar validaciones
         user.setStatus(true);
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        accountCreator.createInitialAccount(savedUser.getId());
+
+        return savedUser;
     }
 
     @Override
