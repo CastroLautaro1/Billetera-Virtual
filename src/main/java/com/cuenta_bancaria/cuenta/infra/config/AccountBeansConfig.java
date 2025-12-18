@@ -15,6 +15,7 @@ public class AccountBeansConfig {
         return new AccountJpaAdapter(jpaRepository);
     }
 
+    // Aca deberia ser AccountServicePort, o sea va el puerto en lugar de la implementación
     @Bean
     public AccountService gestionCuentaService(AccountRepositoryPort repositoryPort) {
         return new AccountService(repositoryPort);

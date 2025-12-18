@@ -8,7 +8,7 @@ public class AccountMapper {
     public static AccountEntity toEntity(Account domain) {
         return AccountEntity.builder()
                 .id(domain.getId())
-                .user_id(domain.getUser_id())
+                .userId(domain.getUser_id())
                 .balance(domain.getBalance())
                 .status(domain.isStatus())
                 .build();
@@ -18,7 +18,7 @@ public class AccountMapper {
     public static Account toDomain(AccountEntity entity) {
         return Account.builder()
                 .id(entity.getId())
-                .user_id(entity.getUser_id())
+                .user_id(entity.getUserId())
                 .balance(entity.getBalance())
                 .status(entity.isStatus())
                 .build();
