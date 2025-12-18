@@ -6,6 +6,7 @@ import com.cuenta_bancaria.user.domain.port.UserServicePort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserServicePort {
@@ -18,31 +19,46 @@ public class UserService implements UserServicePort {
 
     @Override
     public User createUser(User user) {
-        return null;
+
+        // agregar validaciones
+
+        return userRepository.save(user);
     }
 
     @Override
     public User getById(Long id) {
-        return null;
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("El ID no coincide con ningún Usuario"));
     }
 
     @Override
     public User getByAlias(String alias) {
-        return null;
+        return userRepository.findByAlias(alias)
+                .orElseThrow(() -> new RuntimeException("El ID no coincide con ningún Usuario"));
     }
 
     @Override
     public List<User> getAll() {
-        return List.of();
+        return userRepository.findAll();
     }
 
     @Override
     public void logicallyDeleteById(Long id) {
-
+        userRepository.logicallyDeleteById(id);
     }
 
     @Override
-    public User updateUser(Long id, User user) {
-        return null;
+    public User updateUser(Long id, User userUpdate) {
+        User user = getById(id);
+
+        user.builder()
+                .firstname(userUpdate.getFirstname())
+                .lastname((userUpdate.getLastname()))
+                .alias(userUpdate.getAlias())
+                .email(userUpdate.getEmail())
+                .password(userUpdate.getPassword())
+                .build();
+
+        return userRepository.save(user);
     }
 }
