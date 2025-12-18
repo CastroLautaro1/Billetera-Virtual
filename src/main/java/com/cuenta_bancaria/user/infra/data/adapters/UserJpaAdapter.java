@@ -16,7 +16,7 @@ public class UserJpaAdapter implements UserRepositoryPort {
 
     @Override
     public User save(User user) {
-        return null;
+        return userRepository.save(user);
     }
 
     @Override
