@@ -13,6 +13,7 @@ public class UserMapper {
                 .alias(user.getAlias())
                 .email(user.getEmail())
                 .password(user.getPassword())
+                .status(user.isStatus())
                 .build();
     }
 
@@ -24,6 +25,7 @@ public class UserMapper {
                 .alias(user.getAlias())
                 .email(user.getEmail())
                 .password(user.getPassword())
+                .status(user.isStatus())
                 .build();
     }
 

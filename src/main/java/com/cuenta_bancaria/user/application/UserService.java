@@ -21,6 +21,7 @@ public class UserService implements UserServicePort {
     public User createUser(User user) {
 
         // agregar validaciones
+        user.setStatus(true);
 
         return userRepository.save(user);
     }
