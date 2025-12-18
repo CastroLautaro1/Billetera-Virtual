@@ -36,6 +36,23 @@ public class AccountService implements AccountServicePort {
     }
 
     @Override
+    public Account createAccountFromUser(Long userId) {
+
+        if(accountRepository.existsByIdUser(userId)) {
+            throw new RuntimeException("El ID de Usuario ya esta asociado a una cuenta, no puede tener otra");
+        }
+
+        // Recibo el Id del Usuario y creo la cuenta correspondiente
+        Account account = Account.builder()
+                .user_id(userId)
+                .balance(0)
+                .status(true)
+                .build();
+
+        return accountRepository.save(account);
+    }
+
+    @Override
     public Account getAccountById(Long id) {
         Optional<Account> accountOpt = accountRepository.getById(id);
         Account account;

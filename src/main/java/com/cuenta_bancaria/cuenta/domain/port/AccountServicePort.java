@@ -11,4 +11,5 @@ public interface AccountServicePort {
     List<Account> getAll();
     Account updateAccount(Long id, double balance);
     void logicallyDeleteById(Long id);
+    Account createAccountFromUser(Long userId);
 }

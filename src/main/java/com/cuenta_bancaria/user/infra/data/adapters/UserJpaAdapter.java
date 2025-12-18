@@ -4,6 +4,7 @@ import com.cuenta_bancaria.user.domain.User;
 import com.cuenta_bancaria.user.domain.port.UserRepositoryPort;
 import com.cuenta_bancaria.user.infra.data.entity.UserEntity;
 import com.cuenta_bancaria.user.infra.data.mapper.UserMapper;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,6 +56,7 @@ public class UserJpaAdapter implements UserRepositoryPort {
     }
 
     @Override
+    @Transactional
     public void logicallyDeleteById(Long id) {
         userRepository.logicallyDeleteById(id);
     }

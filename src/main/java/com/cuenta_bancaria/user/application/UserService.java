@@ -3,6 +3,7 @@ package com.cuenta_bancaria.user.application;
 import com.cuenta_bancaria.user.domain.User;
 import com.cuenta_bancaria.user.domain.port.UserRepositoryPort;
 import com.cuenta_bancaria.user.domain.port.UserServicePort;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class UserService implements UserServicePort {
     public List<User> getAll() {
         return userRepository.findAll();
     }
+
 
     @Override
     public void logicallyDeleteById(Long id) {
