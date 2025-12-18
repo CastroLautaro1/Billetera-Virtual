@@ -5,7 +5,7 @@ import com.cuenta_bancaria.user.infra.data.entity.UserEntity;
 
 public class UserMapper {
 
-    UserEntity toEntity(User user) {
+    public static UserEntity toEntity(User user) {
         return UserEntity.builder()
                 .id(user.getId())
                 .firstname(user.getFirstname())
@@ -16,7 +16,7 @@ public class UserMapper {
                 .build();
     }
 
-    User toDomain(UserEntity user) {
+    public static User toDomain(UserEntity user) {
         return User.builder()
                 .id(user.getId())
                 .firstname(user.getFirstname())

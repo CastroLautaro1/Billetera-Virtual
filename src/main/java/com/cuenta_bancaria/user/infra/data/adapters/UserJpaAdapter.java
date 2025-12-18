@@ -2,9 +2,12 @@ package com.cuenta_bancaria.user.infra.data.adapters;
 
 import com.cuenta_bancaria.user.domain.User;
 import com.cuenta_bancaria.user.domain.port.UserRepositoryPort;
+import com.cuenta_bancaria.user.infra.data.entity.UserEntity;
+import com.cuenta_bancaria.user.infra.data.mapper.UserMapper;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class UserJpaAdapter implements UserRepositoryPort {
 
@@ -16,36 +19,43 @@ public class UserJpaAdapter implements UserRepositoryPort {
 
     @Override
     public User save(User user) {
-        return userRepository.save(user);
+        UserEntity entity = UserMapper.toEntity(user);
+        UserEntity saved = userRepository.save(entity);
+        return UserMapper.toDomain(saved);
     }
 
     @Override
     public Optional<User> findById(Long id) {
-        return Optional.empty();
+        return userRepository.findById(id)
+                .map(UserMapper::toDomain);
     }
 
     @Override
     public Optional<User> findByAlias(String alias) {
-        return Optional.empty();
+        return userRepository.findByAlias(alias)
+                .map(UserMapper::toDomain);
     }
 
     @Override
     public List<User> findAll() {
-        return List.of();
+        return userRepository.findAll()
+                .stream()
+                .map(UserMapper::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override
     public boolean existsById(Long id) {
-        return false;
+        return userRepository.existsById(id);
     }
 
     @Override
     public boolean existsByAlias(String alias) {
-        return false;
+        return userRepository.existsByAlias(alias);
     }
 
     @Override
     public void logicallyDeleteById(Long id) {
-
+        userRepository.logicallyDeleteById(id);
     }
 }
