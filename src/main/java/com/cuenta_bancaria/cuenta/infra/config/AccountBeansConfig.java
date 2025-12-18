@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class BeansConfig {
+public class AccountBeansConfig {
 
     @Bean
     public AccountRepositoryPort cuentaRepositoryPort(AccountJpaRepository jpaRepository) {
