@@ -2,26 +2,18 @@ package com.cuenta_bancaria.cuenta.infra.data.mapper;
 
 import com.cuenta_bancaria.cuenta.domain.Account;
 import com.cuenta_bancaria.cuenta.infra.data.entity.AccountEntity;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
-public class AccountMapper {
+@Mapper(componentModel = "spring")
+public interface AccountMapper {
 
-    public static AccountEntity toEntity(Account domain) {
-        return AccountEntity.builder()
-                .id(domain.getId())
-                .userId(domain.getUser_id())
-                .balance(domain.getBalance())
-                .status(domain.isStatus())
-                .build();
-    }
+    AccountMapper INSTANCE = Mappers.getMapper(AccountMapper.class);
 
+    @Mapping(source = "user_id", target = "userId")
+    AccountEntity toEntity(Account domain);
 
-    public static Account toDomain(AccountEntity entity) {
-        return Account.builder()
-                .id(entity.getId())
-                .user_id(entity.getUserId())
-                .balance(entity.getBalance())
-                .status(entity.isStatus())
-                .build();
-    }
-
+    @Mapping(source = "userId", target = "user_id")
+    Account toDomain(AccountEntity entity);
 }
