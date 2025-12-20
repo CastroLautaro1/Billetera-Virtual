@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class AccountRequest {
 
     private Long idUser;
-    private double amount;
+    private double balance;
 
 }

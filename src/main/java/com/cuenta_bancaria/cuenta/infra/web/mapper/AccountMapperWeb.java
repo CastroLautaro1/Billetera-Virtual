@@ -2,15 +2,13 @@ package com.cuenta_bancaria.cuenta.infra.web.mapper;
 
 import com.cuenta_bancaria.cuenta.domain.Account;
 import com.cuenta_bancaria.cuenta.infra.web.dto.AccountRequest;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-public class AccountMapperWeb {
+@Mapper(componentModel = "spring")
+public interface AccountMapperWeb {
 
-    public static Account toDomain(AccountRequest request) {
-        return Account.builder()
-                .user_id(request.getIdUser())
-                .balance(request.getAmount())
-                .build();
-
-    }
+    @Mapping(source = "idUser", target = "user_id")
+    Account toDomain(AccountRequest request);
 
 }
