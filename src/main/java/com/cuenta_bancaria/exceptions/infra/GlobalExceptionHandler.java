@@ -31,6 +31,11 @@ public class GlobalExceptionHandler {
         return buildError("ENTITY_INACTIVE", ex.getMessage(), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(InvalidAmountException.class)
+    public ResponseEntity<ErrorResponse> invalidAmoun(InvalidAmountException ex) {
+        return buildError("INVALID_AMOUNT", ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     public ResponseEntity<ErrorResponse> buildError(String code, String message, HttpStatus status) {
         ErrorResponse error = ErrorResponse.builder()
                 .code(code)

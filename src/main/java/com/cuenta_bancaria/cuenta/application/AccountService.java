@@ -3,10 +3,7 @@ package com.cuenta_bancaria.cuenta.application;
 import com.cuenta_bancaria.cuenta.domain.Account;
 import com.cuenta_bancaria.cuenta.domain.port.AccountRepositoryPort;
 import com.cuenta_bancaria.cuenta.domain.port.AccountServicePort;
-import com.cuenta_bancaria.exceptions.domain.EntityAlreadyExistsException;
-import com.cuenta_bancaria.exceptions.domain.EntityInactiveException;
-import com.cuenta_bancaria.exceptions.domain.EntityNotFoundException;
-import com.cuenta_bancaria.exceptions.domain.InsufficientBalanceException;
+import com.cuenta_bancaria.exceptions.domain.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +57,15 @@ public class AccountService implements AccountServicePort {
     @Override
     @Transactional
     public double makeTransaction(Long originId, Long counterpartyId, double amount) {
+
+        if (amount <= 0) {
+            throw new InvalidAmountException("El monto no puede ser igual o menor a 0");
+        }
+
+        if (originId.equals(counterpartyId)) {
+            throw new IllegalArgumentException("La cuenta de origen y destino no pueden ser la misma");
+        }
+
         // Obtengo la cuenta de origen, usando el user_id
         Account origin = getAccountByIdUser(originId);
 
@@ -69,11 +75,6 @@ public class AccountService implements AccountServicePort {
 
         if (origin.getBalance() < amount) {
             throw new InsufficientBalanceException("Saldo insuficiente en la cuenta. Saldo: " + origin.getBalance() + ", Monto: " + amount);
-        }
-
-        if (amount <= 0) {
-            // crear otra excepcion para este caso
-            throw new InsufficientBalanceException("El monto no puede ser igual o menor a 0");
         }
 
         // Obtengo la cuenta de la contraparte, usando su user_id
@@ -87,6 +88,8 @@ public class AccountService implements AccountServicePort {
         origin.setBalance(origin.getBalance() - amount);
         counterparty.setBalance(counterparty.getBalance() + amount);
 
+        accountRepository.save(origin);
+        accountRepository.save(counterparty);
 
         return origin.getBalance();
     }

@@ -29,7 +29,6 @@ public class TransactionService implements TransactionServicePort {
         // 1.2 Obtengo la cuenta de destino mediante el Alias
         Long counterpartyId = userExternal.getUserIdByAlias(alias);
 
-
         // 2. Uso el puerto de cuenta para registrar la transferencia
         double resultingBalance = accountExternal.makeTransaction(t.getOriginAccountId(), counterpartyId, t.getAmount());
 
