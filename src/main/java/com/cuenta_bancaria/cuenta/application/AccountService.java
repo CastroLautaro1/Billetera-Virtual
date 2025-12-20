@@ -3,6 +3,10 @@ package com.cuenta_bancaria.cuenta.application;
 import com.cuenta_bancaria.cuenta.domain.Account;
 import com.cuenta_bancaria.cuenta.domain.port.AccountRepositoryPort;
 import com.cuenta_bancaria.cuenta.domain.port.AccountServicePort;
+import com.cuenta_bancaria.exceptions.domain.EntityAlreadyExistsException;
+import com.cuenta_bancaria.exceptions.domain.EntityInactiveException;
+import com.cuenta_bancaria.exceptions.domain.EntityNotFoundException;
+import com.cuenta_bancaria.exceptions.domain.InsufficientBalanceException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,11 +27,11 @@ public class AccountService implements AccountServicePort {
         // agregar validacion que verifique si el idUser existe
 
         if(accountRepository.existsByIdUser(account.getUser_id())) {
-            throw new RuntimeException("El ID de Usuario ya esta asociado a una cuenta, no puede tener otra");
+            throw new EntityAlreadyExistsException("El ID de Usuario ya esta asociado a una cuenta, no puede tener otra");
         }
 
         if(account.getBalance() < 0) {
-            throw new IllegalArgumentException("El saldo de la cuenta no puede ser inferior a 0");
+            throw new InsufficientBalanceException("El saldo de la cuenta no puede ser inferior a 0");
         }
 
         account.setStatus(true);
@@ -39,7 +43,7 @@ public class AccountService implements AccountServicePort {
     public Account createAccountFromUser(Long userId) {
 
         if(accountRepository.existsByIdUser(userId)) {
-            throw new RuntimeException("El ID de Usuario ya esta asociado a una cuenta, no puede tener otra");
+            throw new EntityAlreadyExistsException("El ID de Usuario ya esta asociado a una cuenta, no puede tener otra");
         }
 
         // Recibo el Id del Usuario y creo la cuenta correspondiente
@@ -61,7 +65,7 @@ public class AccountService implements AccountServicePort {
             account = accountOpt.get();
         }
         else {
-            throw new RuntimeException("El ID ingresado no coincide con ninguna cuenta");
+            throw new EntityNotFoundException("El ID ingresado no coincide con ninguna cuenta");
         }
 
         return account;
@@ -76,7 +80,7 @@ public class AccountService implements AccountServicePort {
             account = accountOpt.get();
         }
         else {
-            throw new RuntimeException("El ID ingresado no coincide con ninguna cuenta");
+            throw new EntityNotFoundException("El ID ingresado no coincide con ninguna cuenta");
         }
 
         return account;
@@ -95,7 +99,7 @@ public class AccountService implements AccountServicePort {
             accountRepository.logicallyDeleteById(id);
         }
         else {
-            throw new RuntimeException("El ID ingresado no coincide con ninguna cuenta");
+            throw new EntityNotFoundException("El ID ingresado no coincide con ninguna cuenta");
         }
     }
 
@@ -107,11 +111,11 @@ public class AccountService implements AccountServicePort {
         Account account = getAccountById(id);
 
         if (!account.isStatus()) {
-            throw new RuntimeException("La cuenta se encuentra inhabilitada");
+            throw new EntityInactiveException("La cuenta se encuentra inhabilitada");
         }
 
         if(balance < 0) {
-            throw new IllegalArgumentException("El saldo de la cuenta no puede ser inferior a 0");
+            throw new InsufficientBalanceException("El saldo de la cuenta no puede ser inferior a 0");
         }
 
         account.setBalance(balance);

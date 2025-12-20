@@ -1,5 +1,6 @@
 package com.cuenta_bancaria.user.application;
 
+import com.cuenta_bancaria.exceptions.domain.EntityNotFoundException;
 import com.cuenta_bancaria.user.domain.User;
 import com.cuenta_bancaria.user.domain.port.AccountCreatorPort;
 import com.cuenta_bancaria.user.domain.port.UserRepositoryPort;
@@ -35,13 +36,13 @@ public class UserService implements UserServicePort {
     @Override
     public User getById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("El ID no coincide con ningún Usuario"));
+                .orElseThrow(() -> new EntityNotFoundException("El ID no coincide con ningún Usuario"));
     }
 
     @Override
     public User getByAlias(String alias) {
         return userRepository.findByAlias(alias)
-                .orElseThrow(() -> new RuntimeException("El ID no coincide con ningún Usuario"));
+                .orElseThrow(() -> new EntityNotFoundException("El alias no coincide con ningún Usuario"));
     }
 
     @Override
