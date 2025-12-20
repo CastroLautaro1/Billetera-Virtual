@@ -1,9 +1,8 @@
 package com.cuenta_bancaria.user.infra.data.external;
 
 import com.cuenta_bancaria.cuenta.domain.port.AccountServicePort;
-import com.cuenta_bancaria.user.domain.port.AccountCreatorPort;
+import com.cuenta_bancaria.user.domain.port.external.AccountCreatorPort;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 
 @RequiredArgsConstructor

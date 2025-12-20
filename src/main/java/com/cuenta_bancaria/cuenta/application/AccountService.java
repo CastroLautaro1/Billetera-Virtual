@@ -7,6 +7,7 @@ import com.cuenta_bancaria.exceptions.domain.EntityAlreadyExistsException;
 import com.cuenta_bancaria.exceptions.domain.EntityInactiveException;
 import com.cuenta_bancaria.exceptions.domain.EntityNotFoundException;
 import com.cuenta_bancaria.exceptions.domain.InsufficientBalanceException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,6 +55,40 @@ public class AccountService implements AccountServicePort {
                 .build();
 
         return accountRepository.save(account);
+    }
+
+    @Override
+    @Transactional
+    public double makeTransaction(Long originId, Long counterpartyId, double amount) {
+        // Obtengo la cuenta de origen, usando el user_id
+        Account origin = getAccountByIdUser(originId);
+
+        if (!origin.isStatus()) {
+            throw new EntityInactiveException("La cuenta de origen se encuentra deshabilitada");
+        }
+
+        if (origin.getBalance() < amount) {
+            throw new InsufficientBalanceException("Saldo insuficiente en la cuenta. Saldo: " + origin.getBalance() + ", Monto: " + amount);
+        }
+
+        if (amount <= 0) {
+            // crear otra excepcion para este caso
+            throw new InsufficientBalanceException("El monto no puede ser igual o menor a 0");
+        }
+
+        // Obtengo la cuenta de la contraparte, usando su user_id
+        Account counterparty = getAccountByIdUser(counterpartyId);
+
+        if(!counterparty.isStatus()) {
+            throw new EntityInactiveException("La cuenta de destino se encuentra deshabilitada");
+        }
+
+        // Realizo la operacion en el balance de ambas cuentas
+        origin.setBalance(origin.getBalance() - amount);
+        counterparty.setBalance(counterparty.getBalance() + amount);
+
+
+        return origin.getBalance();
     }
 
     @Override

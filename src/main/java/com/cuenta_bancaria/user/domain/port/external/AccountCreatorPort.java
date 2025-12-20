@@ -1,4 +1,4 @@
-package com.cuenta_bancaria.user.domain.port;
+package com.cuenta_bancaria.user.domain.port.external;
 
 public interface AccountCreatorPort {
 

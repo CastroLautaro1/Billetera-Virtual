@@ -12,4 +12,5 @@ public interface AccountServicePort {
     Account updateAccount(Long id, double balance);
     void logicallyDeleteById(Long id);
     Account createAccountFromUser(Long userId);
+    double makeTransaction(Long originId, Long counterpartyId, double amount);
 }

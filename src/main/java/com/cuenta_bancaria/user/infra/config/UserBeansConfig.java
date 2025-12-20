@@ -1,9 +1,8 @@
 package com.cuenta_bancaria.user.infra.config;
 
-import com.cuenta_bancaria.cuenta.application.AccountService;
 import com.cuenta_bancaria.cuenta.domain.port.AccountServicePort;
 import com.cuenta_bancaria.user.application.UserService;
-import com.cuenta_bancaria.user.domain.port.AccountCreatorPort;
+import com.cuenta_bancaria.user.domain.port.external.AccountCreatorPort;
 import com.cuenta_bancaria.user.domain.port.UserRepositoryPort;
 import com.cuenta_bancaria.user.infra.data.adapters.UserJpaAdapter;
 import com.cuenta_bancaria.user.infra.data.adapters.UserJpaRepository;

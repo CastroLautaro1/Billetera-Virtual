@@ -2,7 +2,7 @@ package com.cuenta_bancaria.user.application;
 
 import com.cuenta_bancaria.exceptions.domain.EntityNotFoundException;
 import com.cuenta_bancaria.user.domain.User;
-import com.cuenta_bancaria.user.domain.port.AccountCreatorPort;
+import com.cuenta_bancaria.user.domain.port.external.AccountCreatorPort;
 import com.cuenta_bancaria.user.domain.port.UserRepositoryPort;
 import com.cuenta_bancaria.user.domain.port.UserServicePort;
 import jakarta.transaction.Transactional;
@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
