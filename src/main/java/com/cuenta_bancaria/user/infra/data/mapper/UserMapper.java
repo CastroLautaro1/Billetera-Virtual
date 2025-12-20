@@ -2,31 +2,12 @@ package com.cuenta_bancaria.user.infra.data.mapper;
 
 import com.cuenta_bancaria.user.domain.User;
 import com.cuenta_bancaria.user.infra.data.entity.UserEntity;
+import org.mapstruct.Mapper;
 
-public class UserMapper {
+@Mapper(componentModel = "spring")
+public interface UserMapper {
 
-    public static UserEntity toEntity(User user) {
-        return UserEntity.builder()
-                .id(user.getId())
-                .firstname(user.getFirstname())
-                .lastname(user.getLastname())
-                .alias(user.getAlias())
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .status(user.isStatus())
-                .build();
-    }
+    User toDomain(UserEntity entity);
 
-    public static User toDomain(UserEntity user) {
-        return User.builder()
-                .id(user.getId())
-                .firstname(user.getFirstname())
-                .lastname(user.getLastname())
-                .alias(user.getAlias())
-                .email(user.getEmail())
-                .password(user.getPassword())
-                .status(user.isStatus())
-                .build();
-    }
-
+    UserEntity toEntity(User domain);
 }

@@ -4,6 +4,7 @@ import com.cuenta_bancaria.user.domain.User;
 import com.cuenta_bancaria.user.domain.port.UserServicePort;
 import com.cuenta_bancaria.user.infra.web.dto.CreateUserRequest;
 import com.cuenta_bancaria.user.infra.web.mapper.UserMapperWeb;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -12,18 +13,16 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
 
     private final UserServicePort userService;
-
-    public UserController(UserServicePort userService) {
-        this.userService = userService;
-    }
+    private final UserMapperWeb userMapperWeb;
 
     @PostMapping("/create")
     public ResponseEntity<User> createUser(@RequestBody CreateUserRequest request) {
-        User user = UserMapperWeb.toDomain(request);
+        User user = userMapperWeb.toDomain(request);
         User createdUser = userService.createUser(user);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -60,7 +59,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody CreateUserRequest request) {
-        User user = UserMapperWeb.toDomain(request);
+        User user = userMapperWeb.toDomain(request);
         User userUpdated = userService.updateUser(id, user);
         return ResponseEntity.ok(userUpdated);
     }
