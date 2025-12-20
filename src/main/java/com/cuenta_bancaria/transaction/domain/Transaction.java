@@ -14,7 +14,7 @@ import java.time.OffsetDateTime;
 public class Transaction {
 
     private Long id;
-    private Type type;
+    private TransactionType transactionType;
     private Long originAccountId;
     private Long counterpartyAccountId;
     private double amount;
@@ -22,7 +22,7 @@ public class Transaction {
     private String details;
     private OffsetDateTime timestamp;
 
-    public enum Type {
+    public enum TransactionType {
         DEPOSIT, TRANSFER, WITHDRAWAL
     }
 
