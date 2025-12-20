@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class AccountService implements AccountServicePort {
 
-    private AccountRepositoryPort accountRepository;
+    private final AccountRepositoryPort accountRepository;
 
     public AccountService(AccountRepositoryPort accountRepository) {
         this.accountRepository = accountRepository;

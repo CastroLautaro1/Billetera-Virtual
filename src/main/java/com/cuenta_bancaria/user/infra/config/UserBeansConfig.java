@@ -8,6 +8,7 @@ import com.cuenta_bancaria.user.domain.port.UserRepositoryPort;
 import com.cuenta_bancaria.user.infra.data.adapters.UserJpaAdapter;
 import com.cuenta_bancaria.user.infra.data.adapters.UserJpaRepository;
 import com.cuenta_bancaria.user.infra.data.external.UserAccountAdapter;
+import com.cuenta_bancaria.user.infra.data.mapper.UserMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,8 +16,8 @@ import org.springframework.context.annotation.Configuration;
 public class UserBeansConfig {
 
     @Bean
-    public UserRepositoryPort userRepositoryPort(UserJpaRepository userJpaRepository) {
-        return new UserJpaAdapter(userJpaRepository);
+    public UserRepositoryPort userRepositoryPort(UserJpaRepository userJpaRepository, UserMapper userMapper) {
+        return new UserJpaAdapter(userJpaRepository, userMapper);
     }
 
     @Bean

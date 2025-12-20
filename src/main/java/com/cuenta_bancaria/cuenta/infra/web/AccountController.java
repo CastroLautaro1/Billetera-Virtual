@@ -15,39 +15,39 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/cuenta")
+@RequestMapping("/account")
 public class AccountController {
 
     private final AccountServicePort accountService;
     private final AccountMapperWeb accountMapperWeb;
 
-    @PostMapping("/crear")
-    public ResponseEntity<Account> crearCuenta(@RequestBody AccountRequest c) {
-        Account cuentaDomain = accountMapperWeb.toDomain(c);
-        Account cuenta = accountService.createAccount(cuentaDomain);
+    @PostMapping("/create")
+    public ResponseEntity<Account> crearCuenta(@RequestBody AccountRequest request) {
+        Account accountDomain = accountMapperWeb.toDomain(request);
+        Account account = accountService.createAccount(accountDomain);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(cuenta.getId())
+                .buildAndExpand(account.getId())
                 .toUri();
-        return ResponseEntity.created(location).body(cuenta);
+        return ResponseEntity.created(location).body(account);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Account> getById(@PathVariable Long id) {
-        Account cuenta = accountService.getAccountById(id);
-        return ResponseEntity.ok(cuenta);
+        Account account = accountService.getAccountById(id);
+        return ResponseEntity.ok(account);
     }
 
     @GetMapping("/all")
     public ResponseEntity<List<Account>> getAll() {
-        List<Account> cuenta = accountService.getAll();
-        return ResponseEntity.ok(cuenta);
+        List<Account> account = accountService.getAll();
+        return ResponseEntity.ok(account);
     }
 
-    @GetMapping("/usuario/{idUser}")
+    @GetMapping("/user/{idUser}")
     public ResponseEntity<Account> getByIdUser(@PathVariable Long idUser) {
-        Account cuenta = accountService.getAccountByIdUser(idUser);
-        return ResponseEntity.ok(cuenta);
+        Account account = accountService.getAccountByIdUser(idUser);
+        return ResponseEntity.ok(account);
     }
 
     @DeleteMapping("/{id}")
@@ -58,10 +58,10 @@ public class AccountController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Account> updateCuenta(
-            @RequestBody AccountUpdateRequest c,
+            @RequestBody AccountUpdateRequest request,
             @PathVariable Long id) {
-        Account cuenta = accountService.updateAccount(id, c.getAmount());
-        return ResponseEntity.ok(cuenta);
+        Account account = accountService.updateAccount(id, request.getAmount());
+        return ResponseEntity.ok(account);
     }
 
 }
