@@ -56,18 +56,18 @@ public class AccountService implements AccountServicePort {
 
     @Override
     @Transactional
-    public double makeTransaction(Long originId, Long counterpartyId, double amount) {
+    public double makeTransaction(Long originAccountId, Long counterpartyAccountId, double amount) {
 
         if (amount <= 0) {
             throw new InvalidAmountException("El monto no puede ser igual o menor a 0");
         }
 
-        if (originId.equals(counterpartyId)) {
+        if (originAccountId.equals(counterpartyAccountId)) {
             throw new IllegalArgumentException("La cuenta de origen y destino no pueden ser la misma");
         }
 
         // Obtengo la cuenta de origen, usando el user_id
-        Account origin = getAccountByIdUser(originId);
+        Account origin = getAccountById(originAccountId);
 
         if (!origin.isStatus()) {
             throw new EntityInactiveException("La cuenta de origen se encuentra deshabilitada");
@@ -78,7 +78,7 @@ public class AccountService implements AccountServicePort {
         }
 
         // Obtengo la cuenta de la contraparte, usando su user_id
-        Account counterparty = getAccountByIdUser(counterpartyId);
+        Account counterparty = getAccountById(counterpartyAccountId);
 
         if(!counterparty.isStatus()) {
             throw new EntityInactiveException("La cuenta de destino se encuentra deshabilitada");
@@ -92,6 +92,11 @@ public class AccountService implements AccountServicePort {
         accountRepository.save(counterparty);
 
         return origin.getBalance();
+    }
+
+    @Override
+    public Long getAccountIdByUserId(Long userId) {
+        return getAccountByIdUser(userId).getId();
     }
 
     @Override

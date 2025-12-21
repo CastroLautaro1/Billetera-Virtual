@@ -3,6 +3,7 @@ package com.cuenta_bancaria.transaction.infra.web.mapper;
 import com.cuenta_bancaria.transaction.domain.Transaction;
 import com.cuenta_bancaria.transaction.infra.web.dto.TransactionDTO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(
@@ -11,5 +12,6 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 )
 public interface TransactionMapperWeb {
 
+    @Mapping(source = "originId", target = "originAccountId")
     Transaction toDomain(TransactionDTO request);
 }

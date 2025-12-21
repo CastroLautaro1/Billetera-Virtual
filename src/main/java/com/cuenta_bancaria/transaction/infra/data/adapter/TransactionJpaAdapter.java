@@ -40,7 +40,7 @@ public class TransactionJpaAdapter implements TransactionRepositoryPort {
 
     @Override
     public List<Transaction> filterByType(Transaction.TransactionType type) {
-        List<TransactionEntity> list = jpaRepository.findAllByTransactionTypeContains(type);
+        List<TransactionEntity> list = jpaRepository.findAllByTransactionType(type);
         return list.stream()
                 .map(transactionMapper::toDomain)
                 .collect(Collectors.toList());
@@ -57,7 +57,7 @@ public class TransactionJpaAdapter implements TransactionRepositoryPort {
     // Revisar la logica de este metodo
     @Override
     public List<Transaction> getHistoryByDateRange(Long accountId, OffsetDateTime start, OffsetDateTime end) {
-        List<TransactionEntity> list = jpaRepository.findAllByTimestampBetweenAndOriginAccountId(start, end, accountId);
+        List<TransactionEntity> list = jpaRepository.findHistoryByDates(accountId, start, end);
         return list.stream()
                 .map(transactionMapper::toDomain)
                 .collect(Collectors.toList());

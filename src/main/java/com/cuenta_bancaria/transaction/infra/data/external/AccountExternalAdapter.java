@@ -13,4 +13,9 @@ public class AccountExternalAdapter implements AccountExternalPort {
     public double makeTransaction(Long originId, Long counterpartyId, double amount) {
         return accountService.makeTransaction(originId, counterpartyId, amount);
     }
+
+    @Override
+    public Long getAccountIdByUserId(Long userId) {
+        return accountService.getAccountIdByUserId(userId);
+    }
 }

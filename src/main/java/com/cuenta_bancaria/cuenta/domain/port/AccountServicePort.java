@@ -13,4 +13,5 @@ public interface AccountServicePort {
     void logicallyDeleteById(Long id);
     Account createAccountFromUser(Long userId);
     double makeTransaction(Long originId, Long counterpartyId, double amount);
+    Long getAccountIdByUserId(Long userId);
 }

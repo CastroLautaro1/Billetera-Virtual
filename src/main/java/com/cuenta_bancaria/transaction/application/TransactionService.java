@@ -7,6 +7,7 @@ import com.cuenta_bancaria.transaction.domain.port.TransactionServicePort;
 import com.cuenta_bancaria.transaction.domain.port.external.AccountExternalPort;
 import com.cuenta_bancaria.transaction.domain.port.external.UserExternalPort;
 import com.cuenta_bancaria.transaction.infra.web.dto.TransactionDTO;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,19 +23,25 @@ public class TransactionService implements TransactionServicePort {
     private final UserExternalPort userExternal;
 
     @Override
+    @Transactional
     public Transaction makeTransaction(Transaction t, String alias) {
         // 1. Uso el puerto de usuario para obtener el ID del usuario logueado
             // Esto lo tengo que hacer con Spring Security
+        Long originAccountId = accountExternal.getAccountIdByUserId(t.getOriginAccountId());
 
         // 1.2 Obtengo la cuenta de destino mediante el Alias
-        Long counterpartyId = userExternal.getUserIdByAlias(alias);
+        Long counterpartyUserId = userExternal.getUserIdByAlias(alias);
+
+        // 1.3 Obtengo el ID de la Cuenta de destino
+        Long counterpartyAccountId = accountExternal.getAccountIdByUserId(counterpartyUserId);
 
         // 2. Uso el puerto de cuenta para registrar la transferencia
-        double resultingBalance = accountExternal.makeTransaction(t.getOriginAccountId(), counterpartyId, t.getAmount());
+        double resultingBalance = accountExternal.makeTransaction(originAccountId, counterpartyAccountId, t.getAmount());
 
         // 3. Completo la informacion de los campos que faltan
         t.setTransactionType(Transaction.TransactionType.TRANSFER);
-        t.setCounterpartyAccountId(counterpartyId);
+        t.setOriginAccountId(originAccountId);
+        t.setCounterpartyAccountId(counterpartyAccountId);
         t.setResultingBalance(resultingBalance);
         t.setTimestamp(OffsetDateTime.now());
 
