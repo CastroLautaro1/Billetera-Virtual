@@ -11,8 +11,8 @@ public interface TransactionRepositoryPort {
     Transaction save(Transaction t);
     List<Transaction> getAllByAccountId(Long accountId);
     Optional<Transaction> getById(Long id);
-    List<Transaction> filterByType(Transaction.TransactionType type);
-    List<Transaction>findAllByAmountLessThan(double amount);
+    List<Transaction> filterByType(Transaction.TransactionType type, Long accountId);
+    List<Transaction>findAllByAmountLessThan(double amount, Long accountId);
     List<Transaction> getHistoryByDateRange(Long accountId, OffsetDateTime start, OffsetDateTime end);
 
 }

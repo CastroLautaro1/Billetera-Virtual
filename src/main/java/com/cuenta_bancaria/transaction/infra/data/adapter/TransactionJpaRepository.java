@@ -11,9 +11,17 @@ import java.util.List;
 
 public interface TransactionJpaRepository extends JpaRepository<TransactionEntity, Long> {
 
-    List<TransactionEntity> findAllByTransactionType(Transaction.TransactionType transactionType);
+    @Query("SELECT t FROM TransactionEntity t WHERE " +
+            "(t.originAccountId = :id OR t.counterpartyAccountId = :id) " +
+            "AND t.transactionType = :type")
+    List<TransactionEntity> findAllByTransactionType(@Param("type") Transaction.TransactionType transactionType,
+                                                     @Param("id") Long id);
 
-    List<TransactionEntity> findAllByAmountLessThan(double amountIsLessThan);
+    @Query("SELECT t FROM TransactionEntity t WHERE " +
+           "(t.originAccountId = :id OR t.counterpartyAccountId = :id) " +
+           "AND t.amount <= :amount")
+    List<TransactionEntity> findAllByAmountLessThan(@Param("amount") double amount,
+                                                    @Param("id") Long id);
 
     @Query("SELECT t FROM TransactionEntity t WHERE " +
             "(t.originAccountId = :id OR t.counterpartyAccountId = :id) " +

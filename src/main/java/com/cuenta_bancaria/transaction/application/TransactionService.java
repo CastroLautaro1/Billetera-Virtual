@@ -68,13 +68,19 @@ public class TransactionService implements TransactionServicePort {
     }
 
     @Override
-    public List<Transaction> filterByType(Transaction.TransactionType type) {
-        return transactionRepository.filterByType(type);
+    public List<Transaction> filterByType(Transaction.TransactionType type, Long accountId) {
+        // Aca se deberia obtener el accountId segun el Usuario logueado
+
+        if (type == null) {
+            throw new IllegalArgumentException("El tipo de transaccion no puede ser nulo");
+        }
+        return transactionRepository.filterByType(type, accountId);
     }
 
     @Override
-    public List<Transaction> findAllByAmountLessThan(double amount) {
-        return transactionRepository.findAllByAmountLessThan(amount);
+    public List<Transaction> findAllByAmountLessThan(double amount, Long accountId) {
+        // Aca se deberia obtener el accountId segun el Usuario logueado
+        return transactionRepository.findAllByAmountLessThan(amount, accountId);
     }
 
     @Override

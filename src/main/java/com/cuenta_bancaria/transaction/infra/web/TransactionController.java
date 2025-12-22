@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/transaction")
@@ -35,4 +36,19 @@ public class TransactionController {
         Transaction transaction = transactionService.getById(id);
         return ResponseEntity.ok(transaction);
     }
+
+    @GetMapping("/filter/{type}/{accountId}")
+    public ResponseEntity<List<Transaction>> filterByType(@PathVariable Transaction.TransactionType type,
+                                                          @PathVariable Long accountId) {
+        List<Transaction> transactions = transactionService.filterByType(type, accountId);
+        return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("filter/{id}/amount")
+    public ResponseEntity<List<Transaction>> filterByAmount(@RequestParam(name = "max") double amount,
+                                                            @PathVariable Long id) {
+        List<Transaction> transactions = transactionService.findAllByAmountLessThan(amount, id);
+        return ResponseEntity.ok(transactions);
+    }
+
 }

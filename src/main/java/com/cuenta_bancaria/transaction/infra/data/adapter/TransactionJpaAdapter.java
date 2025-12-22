@@ -39,16 +39,16 @@ public class TransactionJpaAdapter implements TransactionRepositoryPort {
     }
 
     @Override
-    public List<Transaction> filterByType(Transaction.TransactionType type) {
-        List<TransactionEntity> list = jpaRepository.findAllByTransactionType(type);
+    public List<Transaction> filterByType(Transaction.TransactionType type, Long accountId) {
+        List<TransactionEntity> list = jpaRepository.findAllByTransactionType(type, accountId);
         return list.stream()
                 .map(transactionMapper::toDomain)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Transaction> findAllByAmountLessThan(double amount) {
-        List<TransactionEntity> list = jpaRepository.findAllByAmountLessThan(amount);
+    public List<Transaction> findAllByAmountLessThan(double amount, Long accountId) {
+        List<TransactionEntity> list = jpaRepository.findAllByAmountLessThan(amount, accountId);
         return list.stream()
                 .map(transactionMapper::toDomain)
                 .collect(Collectors.toList());

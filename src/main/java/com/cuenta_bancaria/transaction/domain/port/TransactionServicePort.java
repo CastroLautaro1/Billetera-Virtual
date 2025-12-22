@@ -11,8 +11,8 @@ public interface TransactionServicePort {
     // Busca ya sea en base al originId o al counterpartyId
     List<Transaction> getAllByAccountId(Long accountId);
     Transaction getById(Long id);
-    List<Transaction> filterByType(Transaction.TransactionType type);
-    List<Transaction> findAllByAmountLessThan(double amount);
+    List<Transaction> filterByType(Transaction.TransactionType type, Long accountId);
+    List<Transaction> findAllByAmountLessThan(double amount, Long accountId);
     List<Transaction> getHistoryByDateRange(Long accountId, OffsetDateTime start, OffsetDateTime end);
 
 }
