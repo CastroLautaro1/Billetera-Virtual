@@ -26,7 +26,7 @@ public class TransactionJpaAdapter implements TransactionRepositoryPort {
 
     @Override
     public List<Transaction> getAllByAccountId(Long accountId) {
-        return jpaRepository.findByOriginAccountIdOrCounterpartyAccountId(accountId)
+        return jpaRepository.findAllByAccountId(accountId)
                 .stream()
                 .map(transactionMapper::toDomain)
                 .collect(Collectors.toList());

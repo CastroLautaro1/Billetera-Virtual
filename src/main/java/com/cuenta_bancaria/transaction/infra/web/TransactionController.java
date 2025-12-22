@@ -37,6 +37,12 @@ public class TransactionController {
         return ResponseEntity.ok(transaction);
     }
 
+    @GetMapping("/filter/{id}")
+    public ResponseEntity<List<Transaction>> getAllByAccountId(@PathVariable Long id) {
+        List<Transaction> transactions = transactionService.getAllByAccountId(id);
+        return ResponseEntity.ok(transactions);
+    }
+
     @GetMapping("/filter/{type}/{accountId}")
     public ResponseEntity<List<Transaction>> filterByType(@PathVariable Transaction.TransactionType type,
                                                           @PathVariable Long accountId) {

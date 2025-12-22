@@ -12,6 +12,10 @@ import java.util.List;
 public interface TransactionJpaRepository extends JpaRepository<TransactionEntity, Long> {
 
     @Query("SELECT t FROM TransactionEntity t WHERE " +
+           "(t.originAccountId = :id OR t.counterpartyAccountId = :id)")
+    List<TransactionEntity> findAllByAccountId(@Param("id") Long accountId);
+
+    @Query("SELECT t FROM TransactionEntity t WHERE " +
             "(t.originAccountId = :id OR t.counterpartyAccountId = :id) " +
             "AND t.transactionType = :type")
     List<TransactionEntity> findAllByTransactionType(@Param("type") Transaction.TransactionType transactionType,
