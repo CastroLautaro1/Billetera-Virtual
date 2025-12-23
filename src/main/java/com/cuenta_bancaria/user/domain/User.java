@@ -17,6 +17,11 @@ public class User {
     private String alias;
     private String email;
     private String password;
+    private Role role;
     private boolean status;
+
+    public enum Role {
+        ADMIN, USER
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.cuenta_bancaria.user.infra.data.entity;
 
 
+import com.cuenta_bancaria.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +33,9 @@ public class UserEntity {
     private String email;
 
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private User.Role role;
 
     private boolean status;
 

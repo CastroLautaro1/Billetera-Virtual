@@ -11,6 +11,7 @@ import java.util.List;
 
 public interface TransactionJpaRepository extends JpaRepository<TransactionEntity, Long> {
 
+    // Obtiene todas las transacciones donde este nuestro Id, ya sea como origen o destino
     @Query("SELECT t FROM TransactionEntity t WHERE " +
            "(t.originAccountId = :id OR t.counterpartyAccountId = :id)")
     List<TransactionEntity> findAllByAccountId(@Param("id") Long accountId);
@@ -34,7 +35,6 @@ public interface TransactionJpaRepository extends JpaRepository<TransactionEntit
                                                @Param("start") OffsetDateTime start,
                                                @Param("end") OffsetDateTime end);
 
-    // Obtiene todas las transacciones donde este nuestro Id, ya sea como origen o destino
-    @Query("SELECT t FROM TransactionEntity t WHERE t.originAccountId = :id OR t.counterpartyAccountId = :id")
-    List<TransactionEntity> findByOriginAccountIdOrCounterpartyAccountId(@Param("id") Long id);
+
+
 }
