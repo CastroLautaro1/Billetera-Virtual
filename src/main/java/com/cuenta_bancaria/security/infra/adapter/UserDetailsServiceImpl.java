@@ -3,7 +3,6 @@ package com.cuenta_bancaria.security.infra.adapter;
 import com.cuenta_bancaria.security.infra.model.UserPrincipal;
 import com.cuenta_bancaria.user.domain.User;
 import com.cuenta_bancaria.user.domain.port.UserRepositoryPort;
-import com.cuenta_bancaria.user.infra.data.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
