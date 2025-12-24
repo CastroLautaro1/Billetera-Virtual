@@ -31,6 +31,15 @@ public class UserJpaAdapter implements UserRepositoryPort {
     }
 
     @Override
+    public Optional<User> findByEmail(String email) {
+        if (email.isEmpty() || email.trim().isBlank()) {
+            throw new IllegalArgumentException("El email no puedo estar vacio");
+        }
+        return userRepository.findByEmail(email)
+                .map(userMapper::toDomain);
+    }
+
+    @Override
     public Optional<User> findByAlias(String alias) {
         return userRepository.findByAlias(alias)
                 .map(userMapper::toDomain);
