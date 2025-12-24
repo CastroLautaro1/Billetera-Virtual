@@ -1,7 +1,6 @@
 package com.cuenta_bancaria.security.infra.model;
 
 import com.cuenta_bancaria.user.domain.User;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
