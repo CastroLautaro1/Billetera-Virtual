@@ -24,12 +24,11 @@ public class TransactionService implements TransactionServicePort {
 
     @Override
     @Transactional
-    public Transaction makeTransaction(Transaction t, String alias) {
-        // 1. Uso el puerto de usuario para obtener el ID del usuario logueado
-            // Esto lo tengo que hacer con Spring Security
-        Long originAccountId = accountExternal.getAccountIdByUserId(t.getOriginAccountId());
+    public Transaction makeTransaction(Transaction t, String alias, Long userId) {
+        // 1. Obtengo el AccountId del usuario logueado
+        Long originAccountId = accountExternal.getAccountIdByUserId(userId);
 
-        // 1.2 Obtengo la cuenta de destino mediante el Alias
+        // 1.2 Obtengo el UserId de destino mediante el Alias
         Long counterpartyUserId = userExternal.getUserIdByAlias(alias);
 
         // 1.3 Obtengo el ID de la Cuenta de destino

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface TransactionServicePort {
 
-    Transaction makeTransaction(Transaction t, String alias);
+    Transaction makeTransaction(Transaction t, String alias, Long userId);
     // Busca ya sea en base al originId o al counterpartyId
     List<Transaction> getAllByAccountId(Long accountId);
     Transaction getById(Long id);

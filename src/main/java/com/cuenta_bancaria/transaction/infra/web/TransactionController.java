@@ -1,5 +1,6 @@
 package com.cuenta_bancaria.transaction.infra.web;
 
+import com.cuenta_bancaria.security.infra.model.UserPrincipal;
 import com.cuenta_bancaria.transaction.domain.Transaction;
 import com.cuenta_bancaria.transaction.domain.port.TransactionServicePort;
 import com.cuenta_bancaria.transaction.infra.web.dto.TransactionDTO;
@@ -7,6 +8,7 @@ import com.cuenta_bancaria.transaction.infra.web.mapper.TransactionMapperWeb;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -23,9 +25,13 @@ public class TransactionController {
 
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @PostMapping("/transfer")
-    public ResponseEntity<Transaction> makeTransfer(@RequestBody TransactionDTO dto) {
+    public ResponseEntity<Transaction> makeTransfer(
+            @RequestBody TransactionDTO dto,
+            @AuthenticationPrincipal UserPrincipal principal)
+    {
+        Long userId = principal.getId();
         Transaction transaction = transactionMapper.toDomain(dto);
-        Transaction saved = transactionService.makeTransaction(transaction, dto.getAlias());
+        Transaction saved = transactionService.makeTransaction(transaction, dto.getAlias(), userId);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(saved.getId())

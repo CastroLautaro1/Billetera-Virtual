@@ -11,7 +11,6 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
     nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
 )
 public interface TransactionMapperWeb {
-
-    @Mapping(source = "originId", target = "originAccountId")
+    
     Transaction toDomain(TransactionDTO request);
 }
