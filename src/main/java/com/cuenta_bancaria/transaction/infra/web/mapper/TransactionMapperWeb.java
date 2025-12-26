@@ -11,6 +11,6 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
     nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
 )
 public interface TransactionMapperWeb {
-    
+
     Transaction toDomain(TransactionDTO request);
 }

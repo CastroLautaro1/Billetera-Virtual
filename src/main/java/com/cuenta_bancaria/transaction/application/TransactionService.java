@@ -48,7 +48,8 @@ public class TransactionService implements TransactionServicePort {
     }
 
     @Override
-    public List<Transaction> getAllByAccountId(Long accountId) {
+    public List<Transaction> getAllByAccountId(Long userId) {
+        Long accountId = accountExternal.getAccountIdByUserId(userId);
         return transactionRepository.getAllByAccountId(accountId);
     }
 
@@ -67,8 +68,8 @@ public class TransactionService implements TransactionServicePort {
     }
 
     @Override
-    public List<Transaction> filterByType(Transaction.TransactionType type, Long accountId) {
-        // Aca se deberia obtener el accountId segun el Usuario logueado
+    public List<Transaction> filterByType(Transaction.TransactionType type, Long userId) {
+        Long accountId = accountExternal.getAccountIdByUserId(userId);
 
         if (type == null) {
             throw new IllegalArgumentException("El tipo de transaccion no puede ser nulo");
@@ -77,8 +78,9 @@ public class TransactionService implements TransactionServicePort {
     }
 
     @Override
-    public List<Transaction> findAllByAmountLessThan(double amount, Long accountId) {
+    public List<Transaction> findAllByAmountLessThan(double amount, Long userId) {
         // Aca se deberia obtener el accountId segun el Usuario logueado
+        Long accountId = accountExternal.getAccountIdByUserId(userId);
         return transactionRepository.findAllByAmountLessThan(amount, accountId);
     }
 

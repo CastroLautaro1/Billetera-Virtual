@@ -47,25 +47,30 @@ public class TransactionController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    @GetMapping("/filter/{id}")
-    public ResponseEntity<List<Transaction>> getAllByAccountId(@PathVariable Long id) {
-        List<Transaction> transactions = transactionService.getAllByAccountId(id);
+    @GetMapping("/filter/all")
+    public ResponseEntity<List<Transaction>> getAllByAccountId(@AuthenticationPrincipal UserPrincipal principal) {
+        Long userId = principal.getId();
+        List<Transaction> transactions = transactionService.getAllByAccountId(userId);
         return ResponseEntity.ok(transactions);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    @GetMapping("/filter/{type}/{accountId}")
-    public ResponseEntity<List<Transaction>> filterByType(@PathVariable Transaction.TransactionType type,
-                                                          @PathVariable Long accountId) {
-        List<Transaction> transactions = transactionService.filterByType(type, accountId);
+    @GetMapping("/filter/{type}")
+    public ResponseEntity<List<Transaction>> filterByType(
+            @PathVariable Transaction.TransactionType type,
+            @AuthenticationPrincipal UserPrincipal principal) {
+        Long userId = principal.getId();
+        List<Transaction> transactions = transactionService.filterByType(type, userId);
         return ResponseEntity.ok(transactions);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    @GetMapping("filter/{id}/amount")
-    public ResponseEntity<List<Transaction>> filterByAmount(@RequestParam(name = "max") double amount,
-                                                            @PathVariable Long id) {
-        List<Transaction> transactions = transactionService.findAllByAmountLessThan(amount, id);
+    @GetMapping("filter/amount")
+    public ResponseEntity<List<Transaction>> filterByAmount(
+            @RequestParam(name = "max") double amount,
+            @AuthenticationPrincipal UserPrincipal principal) {
+        Long userId = principal.getId();
+        List<Transaction> transactions = transactionService.findAllByAmountLessThan(amount, userId);
         return ResponseEntity.ok(transactions);
     }
 
