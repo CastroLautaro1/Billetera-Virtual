@@ -7,6 +7,7 @@ import com.cuenta_bancaria.cuenta.infra.web.dto.AccountUpdateRequest;
 import com.cuenta_bancaria.cuenta.infra.web.mapper.AccountMapperWeb;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -21,6 +22,7 @@ public class AccountController {
     private final AccountServicePort accountService;
     private final AccountMapperWeb accountMapperWeb;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public ResponseEntity<Account> crearCuenta(@RequestBody AccountRequest request) {
         Account accountDomain = accountMapperWeb.toDomain(request);
@@ -32,30 +34,35 @@ public class AccountController {
         return ResponseEntity.created(location).body(account);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<Account> getById(@PathVariable Long id) {
         Account account = accountService.getAccountById(id);
         return ResponseEntity.ok(account);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<List<Account>> getAll() {
         List<Account> account = accountService.getAll();
         return ResponseEntity.ok(account);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/user/{idUser}")
     public ResponseEntity<Account> getByIdUser(@PathVariable Long idUser) {
         Account account = accountService.getAccountByIdUser(idUser);
         return ResponseEntity.ok(account);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCuenta(@PathVariable  Long id) {
         accountService.logicallyDeleteById(id);
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Account> updateCuenta(
             @RequestBody AccountUpdateRequest request,

@@ -6,6 +6,7 @@ import com.cuenta_bancaria.transaction.infra.web.dto.TransactionDTO;
 import com.cuenta_bancaria.transaction.infra.web.mapper.TransactionMapperWeb;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -20,6 +21,7 @@ public class TransactionController {
     private final TransactionServicePort transactionService;
     private final TransactionMapperWeb transactionMapper;
 
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @PostMapping("/transfer")
     public ResponseEntity<Transaction> makeTransfer(@RequestBody TransactionDTO dto) {
         Transaction transaction = transactionMapper.toDomain(dto);
@@ -31,18 +33,21 @@ public class TransactionController {
         return ResponseEntity.created(location).body(saved);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<Transaction> getById(@PathVariable Long id) {
         Transaction transaction = transactionService.getById(id);
         return ResponseEntity.ok(transaction);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/filter/{id}")
     public ResponseEntity<List<Transaction>> getAllByAccountId(@PathVariable Long id) {
         List<Transaction> transactions = transactionService.getAllByAccountId(id);
         return ResponseEntity.ok(transactions);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/filter/{type}/{accountId}")
     public ResponseEntity<List<Transaction>> filterByType(@PathVariable Transaction.TransactionType type,
                                                           @PathVariable Long accountId) {
@@ -50,6 +55,7 @@ public class TransactionController {
         return ResponseEntity.ok(transactions);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("filter/{id}/amount")
     public ResponseEntity<List<Transaction>> filterByAmount(@RequestParam(name = "max") double amount,
                                                             @PathVariable Long id) {
