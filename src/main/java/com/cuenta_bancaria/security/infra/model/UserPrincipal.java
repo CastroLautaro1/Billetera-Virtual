@@ -20,6 +20,8 @@ public class UserPrincipal implements UserDetails {
 
     private Long id;
 
+    private Long accountId;
+
     private String firstname;
 
     private String lastname;

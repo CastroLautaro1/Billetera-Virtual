@@ -48,8 +48,7 @@ public class TransactionService implements TransactionServicePort {
     }
 
     @Override
-    public List<Transaction> getAllByAccountId(Long userId) {
-        Long accountId = accountExternal.getAccountIdByUserId(userId);
+    public List<Transaction> getAllByAccountId(Long accountId) {
         return transactionRepository.getAllByAccountId(accountId);
     }
 

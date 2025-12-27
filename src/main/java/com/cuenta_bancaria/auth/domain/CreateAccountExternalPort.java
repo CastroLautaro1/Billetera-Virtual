@@ -1,6 +1,6 @@
 package com.cuenta_bancaria.auth.domain;
 
-public interface AccountExternalPort {
+public interface CreateAccountExternalPort {
 
     void createAccountByUserId(Long userId);
 }

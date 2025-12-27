@@ -1,6 +1,6 @@
 package com.cuenta_bancaria.auth.application;
 
-import com.cuenta_bancaria.auth.domain.AccountExternalPort;
+import com.cuenta_bancaria.auth.domain.CreateAccountExternalPort;
 import com.cuenta_bancaria.auth.infra.dto.LoginRequest;
 import com.cuenta_bancaria.auth.infra.dto.RegisterRequest;
 import com.cuenta_bancaria.exceptions.domain.EntityInactiveException;
@@ -16,14 +16,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
     private final UserRepositoryPort userRepository;
-    private final AccountExternalPort accountExternal;
+    private final CreateAccountExternalPort accountExternal;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;

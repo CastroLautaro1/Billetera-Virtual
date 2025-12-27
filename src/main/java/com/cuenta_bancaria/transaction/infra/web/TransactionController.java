@@ -49,8 +49,8 @@ public class TransactionController {
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/filter/all")
     public ResponseEntity<List<Transaction>> getAllByAccountId(@AuthenticationPrincipal UserPrincipal principal) {
-        Long userId = principal.getId();
-        List<Transaction> transactions = transactionService.getAllByAccountId(userId);
+        Long accountId = principal.getAccountId();
+        List<Transaction> transactions = transactionService.getAllByAccountId(accountId);
         return ResponseEntity.ok(transactions);
     }
 
