@@ -59,8 +59,8 @@ public class TransactionController {
     public ResponseEntity<List<Transaction>> filterByType(
             @PathVariable Transaction.TransactionType type,
             @AuthenticationPrincipal UserPrincipal principal) {
-        Long userId = principal.getId();
-        List<Transaction> transactions = transactionService.filterByType(type, userId);
+        Long accountId = principal.getAccountId();
+        List<Transaction> transactions = transactionService.filterByType(type, accountId);
         return ResponseEntity.ok(transactions);
     }
 
@@ -69,8 +69,8 @@ public class TransactionController {
     public ResponseEntity<List<Transaction>> filterByAmount(
             @RequestParam(name = "max") double amount,
             @AuthenticationPrincipal UserPrincipal principal) {
-        Long userId = principal.getId();
-        List<Transaction> transactions = transactionService.findAllByAmountLessThan(amount, userId);
+        Long accountId = principal.getAccountId();
+        List<Transaction> transactions = transactionService.findAllByAmountLessThan(amount, accountId);
         return ResponseEntity.ok(transactions);
     }
 
