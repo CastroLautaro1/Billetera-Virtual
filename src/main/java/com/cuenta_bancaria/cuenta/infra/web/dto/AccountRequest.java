@@ -1,17 +1,3 @@
 package com.cuenta_bancaria.cuenta.infra.web.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class AccountRequest {
-
-    private Long idUser;
-    private double balance;
-
-}
+public record AccountRequest (Long idUser, double balance){}

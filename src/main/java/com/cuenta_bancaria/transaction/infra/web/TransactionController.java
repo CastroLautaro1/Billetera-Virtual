@@ -31,7 +31,7 @@ public class TransactionController {
     {
         Long userId = principal.getId();
         Transaction transaction = transactionMapper.toDomain(dto);
-        Transaction saved = transactionService.makeTransaction(transaction, dto.getAlias(), userId);
+        Transaction saved = transactionService.makeTransaction(transaction, dto.alias(), userId);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(saved.getId())

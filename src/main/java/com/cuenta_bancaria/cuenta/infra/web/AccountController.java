@@ -67,7 +67,7 @@ public class AccountController {
     public ResponseEntity<Account> updateCuenta(
             @RequestBody AccountUpdateRequest request,
             @PathVariable Long id) {
-        Account account = accountService.updateAccount(id, request.getAmount());
+        Account account = accountService.updateAccount(id, request.amount());
         return ResponseEntity.ok(account);
     }
 
