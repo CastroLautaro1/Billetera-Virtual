@@ -31,11 +31,11 @@ public class AuthService {
         // Validar si existe por email
 
         User user = User.builder()
-                .firstname(request.getFirstname())
-                .lastname(request.getLastname())
-                .alias(request.getAlias())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .firstname(request.firstname())
+                .lastname(request.lastname())
+                .alias(request.alias())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
                 .role(User.Role.USER)
                 .status(true)
                 .build();
@@ -45,7 +45,7 @@ public class AuthService {
     }
 
     public String login(LoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmail(request.email())
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
         if (!user.isStatus()) {
@@ -53,7 +53,7 @@ public class AuthService {
         }
 
         Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+                new UsernamePasswordAuthenticationToken(request.email(), request.password())
         );
 
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
