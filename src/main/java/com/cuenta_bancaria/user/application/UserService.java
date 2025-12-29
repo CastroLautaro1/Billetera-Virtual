@@ -5,6 +5,7 @@ import com.cuenta_bancaria.user.domain.User;
 import com.cuenta_bancaria.user.domain.port.external.AccountCreatorPort;
 import com.cuenta_bancaria.user.domain.port.UserRepositoryPort;
 import com.cuenta_bancaria.user.domain.port.UserServicePort;
+import com.cuenta_bancaria.user.domain.port.external.PasswordEncoderPort;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class UserService implements UserServicePort {
 
     private final UserRepositoryPort userRepository;
     private final AccountCreatorPort accountCreator;
+    private final PasswordEncoderPort passwordEncoder;
 
     @Override
     @Transactional

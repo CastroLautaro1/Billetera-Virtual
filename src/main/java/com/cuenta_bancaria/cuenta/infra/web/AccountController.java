@@ -24,7 +24,7 @@ public class AccountController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
-    public ResponseEntity<Account> crearCuenta(@RequestBody AccountRequest request) {
+    public ResponseEntity<Account> createAccount(@RequestBody AccountRequest request) {
         Account accountDomain = accountMapperWeb.toDomain(request);
         Account account = accountService.createAccount(accountDomain);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -57,14 +57,14 @@ public class AccountController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCuenta(@PathVariable  Long id) {
+    public ResponseEntity<Void> deleteAccount(@PathVariable  Long id) {
         accountService.logicallyDeleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<Account> updateCuenta(
+    public ResponseEntity<Account> updateAccount(
             @RequestBody AccountUpdateRequest request,
             @PathVariable Long id) {
         Account account = accountService.updateAccount(id, request.amount());
