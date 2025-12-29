@@ -3,6 +3,7 @@ package com.cuenta_bancaria.user.infra.web;
 import com.cuenta_bancaria.user.domain.User;
 import com.cuenta_bancaria.user.domain.port.UserServicePort;
 import com.cuenta_bancaria.user.infra.web.dto.CreateUserRequest;
+import com.cuenta_bancaria.user.infra.web.dto.UserResponse;
 import com.cuenta_bancaria.user.infra.web.mapper.UserMapperWeb;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -44,9 +45,10 @@ public class UserController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/alias/{alias}")
-    public ResponseEntity<User> getByAlias(@PathVariable String alias) {
+    public ResponseEntity<UserResponse> getByAlias(@PathVariable String alias) {
         User user = userService.getByAlias(alias);
-        return ResponseEntity.ok(user);
+        UserResponse response = userMapperWeb.toResponse(user);
+        return ResponseEntity.ok(response);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
