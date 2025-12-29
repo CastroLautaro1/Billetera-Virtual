@@ -1,5 +1,6 @@
 package com.cuenta_bancaria.user.infra.web;
 
+import com.cuenta_bancaria.security.infra.model.UserPrincipal;
 import com.cuenta_bancaria.user.domain.User;
 import com.cuenta_bancaria.user.domain.port.UserServicePort;
 import com.cuenta_bancaria.user.infra.web.dto.CreateUserRequest;
@@ -8,6 +9,7 @@ import com.cuenta_bancaria.user.infra.web.mapper.UserMapperWeb;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -67,9 +69,12 @@ public class UserController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody CreateUserRequest request) {
+    public ResponseEntity<User> updateUser(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @RequestBody CreateUserRequest request
+    ) {
         User user = userMapperWeb.toDomain(request);
-        User userUpdated = userService.updateUser(id, user);
+        User userUpdated = userService.updateUser(principal.getId(), user);
         return ResponseEntity.ok(userUpdated);
     }
 

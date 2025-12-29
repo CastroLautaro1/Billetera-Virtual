@@ -59,17 +59,19 @@ public class UserService implements UserServicePort {
     }
 
     @Override
+    @Transactional
     public User updateUser(Long id, User userUpdate) {
-        User user = getById(id);
+        User existingUser = getById(id);
 
-        user.builder()
-                .firstname(userUpdate.getFirstname())
-                .lastname((userUpdate.getLastname()))
-                .alias(userUpdate.getAlias())
-                .email(userUpdate.getEmail())
-                .password(userUpdate.getPassword())
-                .build();
+        existingUser.setFirstname(userUpdate.getFirstname());
+        existingUser.setLastname(userUpdate.getLastname());
+        existingUser.setAlias(userUpdate.getAlias());
+        existingUser.setEmail(userUpdate.getEmail());
 
-        return userRepository.save(user);
+        if (userUpdate.getPassword() != null && !userUpdate.getPassword().isBlank()) {
+            existingUser.setPassword(passwordEncoder.encode(userUpdate.getPassword()));
+        }
+
+        return userRepository.save(existingUser);
     }
 }
