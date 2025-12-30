@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
 
 @Entity
 @Table(name = "users")
@@ -22,21 +21,26 @@ public class UserEntity {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false, length = 50)
     private String firstname;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false, length = 50)
     private String lastname;
 
+    @Column(unique = true, nullable = false, length = 20)
     private String alias;
 
+    @Column(unique = true, nullable = false, length = 100)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private User.Role role;
 
+    @Column(nullable = false)
     private boolean status;
 
 }
