@@ -6,6 +6,7 @@ import com.cuenta_bancaria.user.domain.port.UserServicePort;
 import com.cuenta_bancaria.user.infra.web.dto.CreateUserRequest;
 import com.cuenta_bancaria.user.infra.web.dto.UserResponse;
 import com.cuenta_bancaria.user.infra.web.mapper.UserMapperWeb;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,7 +27,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
-    public ResponseEntity<User> createUser(@RequestBody CreateUserRequest request) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody CreateUserRequest request) {
         User user = userMapperWeb.toDomain(request);
         User createdUser = userService.createUser(user);
 
@@ -71,7 +72,7 @@ public class UserController {
     @PutMapping("/update")
     public ResponseEntity<User> updateUser(
             @AuthenticationPrincipal UserPrincipal principal,
-            @RequestBody CreateUserRequest request
+            @Valid @RequestBody CreateUserRequest request
     ) {
         User user = userMapperWeb.toDomain(request);
         User userUpdated = userService.updateUser(principal.getId(), user);

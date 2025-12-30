@@ -5,6 +5,7 @@ import com.cuenta_bancaria.transaction.domain.Transaction;
 import com.cuenta_bancaria.transaction.domain.port.TransactionServicePort;
 import com.cuenta_bancaria.transaction.infra.web.dto.TransactionDTO;
 import com.cuenta_bancaria.transaction.infra.web.mapper.TransactionMapperWeb;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,7 +27,7 @@ public class TransactionController {
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @PostMapping("/transfer")
     public ResponseEntity<Transaction> makeTransfer(
-            @RequestBody TransactionDTO dto,
+            @Valid @RequestBody TransactionDTO dto,
             @AuthenticationPrincipal UserPrincipal principal)
     {
         Long userId = principal.getId();
