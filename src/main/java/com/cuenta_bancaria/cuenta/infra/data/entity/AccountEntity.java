@@ -19,11 +19,13 @@ public class AccountEntity {
     @Column(name = "account_id")
     private Long id;
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false, unique = true)
     private Long userId;
 
+    @Column(nullable = false, columnDefinition = "double precision default 0.0")
     private double balance;
 
+    @Column(nullable = false)
     private boolean status;
 
 }
