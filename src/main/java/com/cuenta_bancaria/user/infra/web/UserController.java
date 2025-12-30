@@ -68,7 +68,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    @PutMapping("/{id}")
+    @PutMapping("/update")
     public ResponseEntity<User> updateUser(
             @AuthenticationPrincipal UserPrincipal principal,
             @RequestBody CreateUserRequest request
