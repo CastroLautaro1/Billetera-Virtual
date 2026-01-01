@@ -13,6 +13,7 @@ public interface UserRepositoryPort {
     Optional<User> findByAlias(String alias);
     List<User> findAll();
     boolean existsById(Long id);
+    boolean existsByEmail(String email);
     boolean existsByAlias(String alias);
     void logicallyDeleteById(Long id);
 
