@@ -22,6 +22,7 @@ public class TransactionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private Transaction.TransactionType transactionType;
 
