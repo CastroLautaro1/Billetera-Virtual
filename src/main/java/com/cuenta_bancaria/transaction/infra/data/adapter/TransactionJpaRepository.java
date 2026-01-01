@@ -2,6 +2,8 @@ package com.cuenta_bancaria.transaction.infra.data.adapter;
 
 import com.cuenta_bancaria.transaction.domain.Transaction;
 import com.cuenta_bancaria.transaction.infra.data.entity.TransactionEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,7 +16,7 @@ public interface TransactionJpaRepository extends JpaRepository<TransactionEntit
     // Obtiene todas las transacciones donde este nuestro Id, ya sea como origen o destino
     @Query("SELECT t FROM TransactionEntity t WHERE " +
            "(t.originAccountId = :id OR t.counterpartyAccountId = :id)")
-    List<TransactionEntity> findAllByAccountId(@Param("id") Long accountId);
+    Page<TransactionEntity> findAllByAccountId(@Param("id") Long accountId, Pageable pageable);
 
     @Query("SELECT t FROM TransactionEntity t WHERE " +
             "(t.originAccountId = :id OR t.counterpartyAccountId = :id) " +

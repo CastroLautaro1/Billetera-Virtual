@@ -5,6 +5,8 @@ import com.cuenta_bancaria.transaction.domain.port.TransactionRepositoryPort;
 import com.cuenta_bancaria.transaction.infra.data.entity.TransactionEntity;
 import com.cuenta_bancaria.transaction.infra.data.mapper.TransactionMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -25,11 +27,9 @@ public class TransactionJpaAdapter implements TransactionRepositoryPort {
     }
 
     @Override
-    public List<Transaction> getAllByAccountId(Long accountId) {
-        return jpaRepository.findAllByAccountId(accountId)
-                .stream()
-                .map(transactionMapper::toDomain)
-                .collect(Collectors.toList());
+    public Page<Transaction> getAllByAccountId(Long accountId, Pageable pageable) {
+        return jpaRepository.findAllByAccountId(accountId, pageable)
+                .map(transactionMapper::toDomain);
     }
 
     @Override

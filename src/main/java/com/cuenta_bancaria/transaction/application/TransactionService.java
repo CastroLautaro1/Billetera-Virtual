@@ -6,10 +6,10 @@ import com.cuenta_bancaria.transaction.domain.port.TransactionRepositoryPort;
 import com.cuenta_bancaria.transaction.domain.port.TransactionServicePort;
 import com.cuenta_bancaria.transaction.domain.port.external.AccountExternalPort;
 import com.cuenta_bancaria.transaction.domain.port.external.UserExternalPort;
-import com.cuenta_bancaria.transaction.infra.web.dto.TransactionDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -48,8 +48,8 @@ public class TransactionService implements TransactionServicePort {
     }
 
     @Override
-    public List<Transaction> getAllByAccountId(Long accountId) {
-        return transactionRepository.getAllByAccountId(accountId);
+    public Page<Transaction> getAllByAccountId(Long accountId, Pageable pageable) {
+        return transactionRepository.getAllByAccountId(accountId, pageable);
     }
 
     @Override
