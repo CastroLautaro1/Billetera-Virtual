@@ -3,6 +3,7 @@ package com.cuenta_bancaria.auth.application;
 import com.cuenta_bancaria.auth.domain.CreateAccountExternalPort;
 import com.cuenta_bancaria.auth.infra.dto.LoginRequest;
 import com.cuenta_bancaria.auth.infra.dto.RegisterRequest;
+import com.cuenta_bancaria.exceptions.domain.EntityAlreadyExistsException;
 import com.cuenta_bancaria.exceptions.domain.EntityInactiveException;
 import com.cuenta_bancaria.exceptions.domain.EntityNotFoundException;
 import com.cuenta_bancaria.security.application.JwtService;
@@ -28,7 +29,14 @@ public class AuthService {
 
     public void register(RegisterRequest request) {
 
-        // Validar si existe por email
+        // hacer un metodo para usar exists en lugar de find
+        if (userRepository.findByEmail(request.email()).isPresent()) {
+            throw new EntityAlreadyExistsException("El email ingresado ya esta registrado");
+        }
+
+        if (userRepository.existsByAlias(request.alias())) {
+            throw new EntityAlreadyExistsException("El alias ingresado esta en uso");
+        }
 
         User user = User.builder()
                 .firstname(request.firstname())
