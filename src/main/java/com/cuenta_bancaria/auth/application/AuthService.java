@@ -1,20 +1,20 @@
 package com.cuenta_bancaria.auth.application;
 
+import com.cuenta_bancaria.auth.domain.AuthPasswordEncoderPort;
 import com.cuenta_bancaria.auth.domain.CreateAccountExternalPort;
+import com.cuenta_bancaria.auth.domain.IdentityServicePort;
+import com.cuenta_bancaria.auth.domain.TokenProviderPort;
 import com.cuenta_bancaria.auth.infra.dto.LoginRequest;
 import com.cuenta_bancaria.auth.infra.dto.RegisterRequest;
 import com.cuenta_bancaria.exceptions.domain.EntityAlreadyExistsException;
 import com.cuenta_bancaria.exceptions.domain.EntityInactiveException;
 import com.cuenta_bancaria.exceptions.domain.EntityNotFoundException;
-import com.cuenta_bancaria.security.application.JwtService;
 import com.cuenta_bancaria.user.domain.User;
 import com.cuenta_bancaria.user.domain.port.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +24,9 @@ public class AuthService {
 
     private final UserRepositoryPort userRepository;
     private final CreateAccountExternalPort accountExternal;
-    private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
+    private final IdentityServicePort identityService;
+    private final TokenProviderPort tokenProvider;
+    private final AuthPasswordEncoderPort authPasswordEncoder;
 
     @Transactional
     public void register(RegisterRequest request) {
@@ -45,7 +45,7 @@ public class AuthService {
                 .lastname(request.lastname())
                 .alias(request.alias())
                 .email(request.email())
-                .password(passwordEncoder.encode(request.password()))
+                .password(authPasswordEncoder.encodePass(request.password()))
                 .role(User.Role.USER)
                 .status(true)
                 .build();
@@ -62,13 +62,15 @@ public class AuthService {
             throw new EntityInactiveException("El usuario se encuenta deshabilitado");
         }
 
-        Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.email(), request.password())
-        );
+        identityService.authenticate(request.email(), request.password());
 
-        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+//        Authentication auth = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(request.email(), request.password())
+//        );
+//
+//        UserDetails userDetails = (UserDetails) auth.getPrincipal();
 
-        return jwtService.generateToken(userDetails);
+        return tokenProvider.generateToken(request.email());
     }
 
 
