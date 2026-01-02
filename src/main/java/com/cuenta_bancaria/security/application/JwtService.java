@@ -22,9 +22,9 @@ public class JwtService {
     // 24 horas
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24;
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(String email) {
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
