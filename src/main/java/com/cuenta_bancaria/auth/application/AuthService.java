@@ -1,9 +1,6 @@
 package com.cuenta_bancaria.auth.application;
 
-import com.cuenta_bancaria.auth.domain.AuthPasswordEncoderPort;
-import com.cuenta_bancaria.auth.domain.CreateAccountExternalPort;
-import com.cuenta_bancaria.auth.domain.IdentityServicePort;
-import com.cuenta_bancaria.auth.domain.TokenProviderPort;
+import com.cuenta_bancaria.auth.domain.*;
 import com.cuenta_bancaria.auth.infra.dto.LoginRequest;
 import com.cuenta_bancaria.auth.infra.dto.RegisterRequest;
 import com.cuenta_bancaria.exceptions.domain.EntityAlreadyExistsException;
@@ -24,6 +21,7 @@ public class AuthService {
 
     private final UserRepositoryPort userRepository;
     private final CreateAccountExternalPort accountExternal;
+    private final AliasGeneratorPort aliasGenerator;
     private final IdentityServicePort identityService;
     private final TokenProviderPort tokenProvider;
     private final AuthPasswordEncoderPort authPasswordEncoder;
@@ -31,19 +29,18 @@ public class AuthService {
     @Transactional
     public void register(RegisterRequest request) {
 
-        // hacer un metodo para usar exists en lugar de find
         if (userRepository.existsByEmail(request.email())) {
             throw new EntityAlreadyExistsException("El email ingresado ya esta registrado");
         }
-
-        if (userRepository.existsByAlias(request.alias())) {
-            throw new EntityAlreadyExistsException("El alias ingresado esta en uso");
-        }
+//
+//        if (userRepository.existsByAlias(request.alias())) {
+//            throw new EntityAlreadyExistsException("El alias ingresado esta en uso");
+//        }
 
         User user = User.builder()
                 .firstname(request.firstname())
                 .lastname(request.lastname())
-                .alias(request.alias())
+                .alias(generateAlias())
                 .email(request.email())
                 .password(authPasswordEncoder.encodePass(request.password()))
                 .role(User.Role.USER)
@@ -64,13 +61,15 @@ public class AuthService {
 
         identityService.authenticate(request.email(), request.password());
 
-//        Authentication auth = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(request.email(), request.password())
-//        );
-//
-//        UserDetails userDetails = (UserDetails) auth.getPrincipal();
-
         return tokenProvider.generateToken(request.email());
+    }
+
+    public String generateAlias() {
+        String alias;
+        do {
+            alias = aliasGenerator.generate();
+        } while (userRepository.existsByAlias(alias));
+        return alias;
     }
 
 
