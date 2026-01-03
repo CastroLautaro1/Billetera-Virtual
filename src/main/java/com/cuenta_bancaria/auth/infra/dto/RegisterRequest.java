@@ -15,10 +15,10 @@ public record RegisterRequest (
         @Size(min = 2, max = 50, message = "El nombre debe tener entre 2 y 50 caracteres")
         String lastname,
 
-        @NotBlank(message = "El alias es obligatorio")
-        @Size(min = 4, max = 20, message = "El alias debe tener entre 4 y 20 caracteres")
-        @Pattern(regexp = "^[a-zA-Z0-9._]+$", message = "El alias solo puede contener letras, números, puntos y guiones bajos")
-        String alias,
+//        @NotBlank(message = "El alias es obligatorio")
+//        @Size(min = 4, max = 20, message = "El alias debe tener entre 4 y 20 caracteres")
+//        @Pattern(regexp = "^[a-zA-Z0-9._]+$", message = "El alias solo puede contener letras, números, puntos y guiones bajos")
+//        String alias,
 
         @NotBlank(message = "El email es obligatorio")
         @Email(message = "El formato del email no es valido")
