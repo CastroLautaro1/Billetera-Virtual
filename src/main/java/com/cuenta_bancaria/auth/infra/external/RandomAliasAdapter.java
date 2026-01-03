@@ -3,6 +3,7 @@ package com.cuenta_bancaria.auth.infra.external;
 import com.cuenta_bancaria.auth.domain.AliasGeneratorPort;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,6 +11,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+@Component
 public class RandomAliasAdapter implements AliasGeneratorPort {
 
     private final List<String> words = new ArrayList<>();
