@@ -3,6 +3,7 @@ package com.cuenta_bancaria.user.infra.web;
 import com.cuenta_bancaria.security.infra.model.UserPrincipal;
 import com.cuenta_bancaria.user.domain.User;
 import com.cuenta_bancaria.user.domain.port.UserServicePort;
+import com.cuenta_bancaria.user.infra.web.dto.AliasUpdateRequest;
 import com.cuenta_bancaria.user.infra.web.dto.CreateUserRequest;
 import com.cuenta_bancaria.user.infra.web.dto.UserProfileResponse;
 import com.cuenta_bancaria.user.infra.web.dto.UserResponse;
@@ -86,6 +87,16 @@ public class UserController {
         User user = userMapperWeb.toDomain(request);
         User userUpdated = userService.updateUser(principal.getId(), user);
         return ResponseEntity.ok(userUpdated);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PatchMapping("/update/alias")
+    public ResponseEntity<Void> updateAlias(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @Valid @RequestBody AliasUpdateRequest request
+    ) {
+        userService.updateAlias(principal.getId(), request.alias());
+        return ResponseEntity.noContent().build();
     }
 
 

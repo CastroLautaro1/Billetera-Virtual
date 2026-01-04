@@ -77,9 +77,14 @@ public class UserService implements UserServicePort {
     }
 
     @Override
+    @Transactional
     public void updateAlias(Long id, String alias) {
 
         User user = getById(id);
+
+        if (user.getAlias().equals(alias)) {
+            throw new IllegalArgumentException("El alias ingresado es igual al actual");
+        }
 
         if (userRepository.existsByAlias(alias)) {
             throw new EntityAlreadyExistsException("El alias ingresado no esta disponible");
