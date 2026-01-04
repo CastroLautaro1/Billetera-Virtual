@@ -13,6 +13,7 @@ public class Account {
 
     private Long id;
     private Long user_id;
+    private String cvu;
     private double balance;
     private boolean status;
 

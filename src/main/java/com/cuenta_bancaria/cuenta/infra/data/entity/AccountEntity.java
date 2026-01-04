@@ -22,6 +22,9 @@ public class AccountEntity {
     @Column(name = "user_id", nullable = false, unique = true)
     private Long userId;
 
+    @Column(nullable = false, unique = true)
+    private String cvu;
+
     @Column(nullable = false, columnDefinition = "double precision default 0.0")
     private double balance;
 
