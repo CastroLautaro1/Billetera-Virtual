@@ -12,4 +12,6 @@ public interface UserServicePort {
     List<User> getAll();
     void logicallyDeleteById(Long id);
     User updateUser(Long id, User user);
+    void updateAlias(Long id, String alias);
+
 }

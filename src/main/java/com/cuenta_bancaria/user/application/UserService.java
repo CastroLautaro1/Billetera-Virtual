@@ -1,5 +1,6 @@
 package com.cuenta_bancaria.user.application;
 
+import com.cuenta_bancaria.exceptions.domain.EntityAlreadyExistsException;
 import com.cuenta_bancaria.exceptions.domain.EntityNotFoundException;
 import com.cuenta_bancaria.user.domain.User;
 import com.cuenta_bancaria.user.domain.port.external.AccountCreatorPort;
@@ -73,5 +74,19 @@ public class UserService implements UserServicePort {
         }
 
         return userRepository.save(existingUser);
+    }
+
+    @Override
+    public void updateAlias(Long id, String alias) {
+
+        User user = getById(id);
+
+        if (userRepository.existsByAlias(alias)) {
+            throw new EntityAlreadyExistsException("El alias ingresado no esta disponible");
+        }
+
+        user.setAlias(alias);
+
+        userRepository.save(user);
     }
 }
