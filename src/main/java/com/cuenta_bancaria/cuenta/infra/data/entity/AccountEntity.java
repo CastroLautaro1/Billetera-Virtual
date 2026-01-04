@@ -22,7 +22,7 @@ public class AccountEntity {
     @Column(name = "user_id", nullable = false, unique = true)
     private Long userId;
 
-    @Column(nullable = false, unique = true)
+    @Column(length = 23, unique = true)
     private String cvu;
 
     @Column(nullable = false, columnDefinition = "double precision default 0.0")

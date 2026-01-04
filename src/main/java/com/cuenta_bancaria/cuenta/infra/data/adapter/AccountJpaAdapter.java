@@ -2,6 +2,7 @@ package com.cuenta_bancaria.cuenta.infra.data.adapter;
 
 import com.cuenta_bancaria.cuenta.domain.Account;
 import com.cuenta_bancaria.cuenta.domain.port.AccountRepositoryPort;
+import com.cuenta_bancaria.cuenta.domain.port.CvuGeneratorPort;
 import com.cuenta_bancaria.cuenta.infra.data.entity.AccountEntity;
 import com.cuenta_bancaria.cuenta.infra.data.mapper.AccountMapper;
 import jakarta.transaction.Transactional;
@@ -16,11 +17,31 @@ public class AccountJpaAdapter implements AccountRepositoryPort {
 
     private final AccountJpaRepository jpaRepository;
     private final AccountMapper accountMapper;
+    private final CvuGeneratorPort cvuGenerator;
 
     @Override
     public Account save(Account account) {
         AccountEntity entity = accountMapper.toEntity(account);
         AccountEntity savedEntity = jpaRepository.save(entity);
+        return accountMapper.toDomain(savedEntity);
+    }
+
+    @Override
+    public Account createAccountFromUser(Long idUser) {
+        // Recibo el Id del Usuario y creo la cuenta correspondiente
+        AccountEntity entity = AccountEntity.builder()
+                .userId(idUser)
+                .balance(0)
+                .status(true)
+                .build();
+
+        entity = jpaRepository.save(entity);
+
+        String cvu = cvuGenerator.generate(entity.getId());
+        entity.setCvu(cvu);
+
+        AccountEntity savedEntity =  jpaRepository.saveAndFlush(entity);
+
         return accountMapper.toDomain(savedEntity);
     }
 

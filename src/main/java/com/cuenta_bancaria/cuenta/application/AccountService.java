@@ -3,7 +3,6 @@ package com.cuenta_bancaria.cuenta.application;
 import com.cuenta_bancaria.cuenta.domain.Account;
 import com.cuenta_bancaria.cuenta.domain.port.AccountRepositoryPort;
 import com.cuenta_bancaria.cuenta.domain.port.AccountServicePort;
-import com.cuenta_bancaria.cuenta.domain.port.CvuGeneratorPort;
 import com.cuenta_bancaria.exceptions.domain.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +16,6 @@ import java.util.Optional;
 public class AccountService implements AccountServicePort {
 
     private final AccountRepositoryPort accountRepository;
-    private final CvuGeneratorPort cvuGenerator;
-
 
     @Override
     public Account createAccount(Account account) {
@@ -45,19 +42,7 @@ public class AccountService implements AccountServicePort {
             throw new EntityAlreadyExistsException("El ID de Usuario ya esta asociado a una cuenta, no puede tener otra");
         }
 
-        // Recibo el Id del Usuario y creo la cuenta correspondiente
-        Account account = Account.builder()
-                .user_id(userId)
-                .balance(0)
-                .status(true)
-                .build();
-
-        Account accountSaved = accountRepository.save(account);
-
-        String cvu = cvuGenerator.generate(accountSaved.getId());
-        accountSaved.setCvu(cvu);
-
-        return accountRepository.save(accountSaved);
+        return accountRepository.createAccountFromUser(userId);
     }
 
     @Override

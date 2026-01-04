@@ -14,12 +14,12 @@ import org.springframework.context.annotation.Configuration;
 public class AccountBeansConfig {
 
     @Bean
-    public AccountRepositoryPort accountRepositoryPort(AccountJpaRepository jpaRepository, AccountMapper accountMapper) {
-        return new AccountJpaAdapter(jpaRepository, accountMapper);
+    public AccountRepositoryPort accountRepositoryPort(AccountJpaRepository jpaRepository, AccountMapper accountMapper, CvuGeneratorPort cvuGeneratorPort) {
+        return new AccountJpaAdapter(jpaRepository, accountMapper, cvuGeneratorPort);
     }
 
     @Bean
-    public AccountServicePort accountServicePort(AccountRepositoryPort repositoryPort, CvuGeneratorPort cvuGeneratorPort) {
-        return new AccountService(repositoryPort, cvuGeneratorPort);
+    public AccountServicePort accountServicePort(AccountRepositoryPort repositoryPort) {
+        return new AccountService(repositoryPort);
     }
 }

@@ -8,6 +8,7 @@ import java.util.Optional;
 public interface AccountRepositoryPort {
 
     Account save(Account account);
+    Account createAccountFromUser(Long idUser);
     Optional<Account> getById(Long id);
     Optional<Account> getByIdUser(Long idUser);
     List<Account> findAll();
