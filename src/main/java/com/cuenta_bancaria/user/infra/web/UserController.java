@@ -4,6 +4,7 @@ import com.cuenta_bancaria.security.infra.model.UserPrincipal;
 import com.cuenta_bancaria.user.domain.User;
 import com.cuenta_bancaria.user.domain.port.UserServicePort;
 import com.cuenta_bancaria.user.infra.web.dto.CreateUserRequest;
+import com.cuenta_bancaria.user.infra.web.dto.UserProfileResponse;
 import com.cuenta_bancaria.user.infra.web.dto.UserResponse;
 import com.cuenta_bancaria.user.infra.web.mapper.UserMapperWeb;
 import jakarta.validation.Valid;
@@ -44,6 +45,14 @@ public class UserController {
     public ResponseEntity<User> getById(@PathVariable Long id) {
         User user = userService.getById(id);
         return ResponseEntity.ok(user);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @GetMapping("/profile")
+    public ResponseEntity<UserProfileResponse> getUserProfile(@AuthenticationPrincipal UserPrincipal principal) {
+       User user = userService.getById(principal.getId());
+       UserProfileResponse profile = userMapperWeb.toProfileResponse(user);
+       return ResponseEntity.ok(profile);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
