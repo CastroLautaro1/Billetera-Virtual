@@ -3,21 +3,22 @@ package com.cuenta_bancaria.cuenta.application;
 import com.cuenta_bancaria.cuenta.domain.Account;
 import com.cuenta_bancaria.cuenta.domain.port.AccountRepositoryPort;
 import com.cuenta_bancaria.cuenta.domain.port.AccountServicePort;
+import com.cuenta_bancaria.cuenta.domain.port.CvuGeneratorPort;
 import com.cuenta_bancaria.exceptions.domain.*;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AccountService implements AccountServicePort {
 
     private final AccountRepositoryPort accountRepository;
+    private final CvuGeneratorPort cvuGenerator;
 
-    public AccountService(AccountRepositoryPort accountRepository) {
-        this.accountRepository = accountRepository;
-    }
 
     @Override
     public Account createAccount(Account account) {

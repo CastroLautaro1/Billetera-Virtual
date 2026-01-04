@@ -3,6 +3,7 @@ package com.cuenta_bancaria.cuenta.infra.config;
 import com.cuenta_bancaria.cuenta.application.AccountService;
 import com.cuenta_bancaria.cuenta.domain.port.AccountRepositoryPort;
 import com.cuenta_bancaria.cuenta.domain.port.AccountServicePort;
+import com.cuenta_bancaria.cuenta.domain.port.CvuGeneratorPort;
 import com.cuenta_bancaria.cuenta.infra.data.adapter.AccountJpaAdapter;
 import com.cuenta_bancaria.cuenta.infra.data.adapter.AccountJpaRepository;
 import com.cuenta_bancaria.cuenta.infra.data.mapper.AccountMapper;
@@ -18,7 +19,7 @@ public class AccountBeansConfig {
     }
 
     @Bean
-    public AccountServicePort accountServicePort(AccountRepositoryPort repositoryPort) {
-        return new AccountService(repositoryPort);
+    public AccountServicePort accountServicePort(AccountRepositoryPort repositoryPort, CvuGeneratorPort cvuGeneratorPort) {
+        return new AccountService(repositoryPort, cvuGeneratorPort);
     }
 }
