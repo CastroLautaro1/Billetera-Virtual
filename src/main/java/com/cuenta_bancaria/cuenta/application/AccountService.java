@@ -52,7 +52,12 @@ public class AccountService implements AccountServicePort {
                 .status(true)
                 .build();
 
-        return accountRepository.save(account);
+        Account accountSaved = accountRepository.save(account);
+
+        String cvu = cvuGenerator.generate(accountSaved.getId());
+        accountSaved.setCvu(cvu);
+
+        return accountRepository.save(accountSaved);
     }
 
     @Override
