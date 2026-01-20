@@ -27,9 +27,6 @@ public class UserEntity {
     @Column(name = "last_name", nullable = false, length = 50)
     private String lastname;
 
-    @Column(unique = true, nullable = false, length = 20)
-    private String alias;
-
     @Column(unique = true, nullable = false, length = 100)
     private String email;
 

@@ -5,7 +5,6 @@ import com.cuenta_bancaria.transaction.domain.Transaction;
 import com.cuenta_bancaria.transaction.domain.port.TransactionRepositoryPort;
 import com.cuenta_bancaria.transaction.domain.port.TransactionServicePort;
 import com.cuenta_bancaria.transaction.domain.port.external.AccountExternalPort;
-import com.cuenta_bancaria.transaction.domain.port.external.UserExternalPort;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,6 @@ public class TransactionService implements TransactionServicePort {
 
     private final TransactionRepositoryPort transactionRepository;
     private final AccountExternalPort accountExternal;
-    private final UserExternalPort userExternal;
 
     @Override
     @Transactional
@@ -28,11 +26,8 @@ public class TransactionService implements TransactionServicePort {
         // 1. Obtengo el AccountId del usuario logueado
         Long originAccountId = accountExternal.getAccountIdByUserId(userId);
 
-        // 1.2 Obtengo el UserId de destino mediante el Alias
-        Long counterpartyUserId = userExternal.getUserIdByAlias(alias);
-
-        // 1.3 Obtengo el ID de la Cuenta de destino
-        Long counterpartyAccountId = accountExternal.getAccountIdByUserId(counterpartyUserId);
+        // 1.2 Obtengo el ID de la Cuenta de destino mediante el Alias
+        Long counterpartyAccountId = accountExternal.getCounterpartyAccountIdByAlias(alias);
 
         // 2. Uso el puerto de cuenta para registrar la transferencia
         double resultingBalance = accountExternal.makeTransaction(originAccountId, counterpartyAccountId, t.getAmount());

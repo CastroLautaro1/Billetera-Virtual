@@ -26,8 +26,6 @@ public class UserPrincipal implements UserDetails {
 
     private String lastname;
 
-    private String alias;
-
     private String email;
 
     private String password;

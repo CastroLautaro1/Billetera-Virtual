@@ -1,6 +1,6 @@
 package com.cuenta_bancaria.transaction.infra.data.external;
 
-import com.cuenta_bancaria.cuenta.domain.port.AccountServicePort;
+import com.cuenta_bancaria.account.domain.port.AccountServicePort;
 import com.cuenta_bancaria.transaction.domain.port.external.AccountExternalPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -19,5 +19,10 @@ public class AccountExternalAdapter implements AccountExternalPort {
     @Override
     public Long getAccountIdByUserId(Long userId) {
         return accountService.getAccountIdByUserId(userId);
+    }
+
+    @Override
+    public Long getCounterpartyAccountIdByAlias(String alias) {
+        return accountService.getAccountIdByAlias(alias);
     }
 }

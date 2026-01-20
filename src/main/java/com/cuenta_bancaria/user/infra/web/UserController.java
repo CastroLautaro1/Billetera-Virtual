@@ -3,10 +3,8 @@ package com.cuenta_bancaria.user.infra.web;
 import com.cuenta_bancaria.security.infra.model.UserPrincipal;
 import com.cuenta_bancaria.user.domain.User;
 import com.cuenta_bancaria.user.domain.port.UserServicePort;
-import com.cuenta_bancaria.user.infra.web.dto.AliasUpdateRequest;
 import com.cuenta_bancaria.user.infra.web.dto.CreateUserRequest;
 import com.cuenta_bancaria.user.infra.web.dto.UserProfileResponse;
-import com.cuenta_bancaria.user.infra.web.dto.UserResponse;
 import com.cuenta_bancaria.user.infra.web.mapper.UserMapperWeb;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,14 +54,6 @@ public class UserController {
        return ResponseEntity.ok(profile);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    @GetMapping("/alias/{alias}")
-    public ResponseEntity<UserResponse> getByAlias(@PathVariable String alias) {
-        User user = userService.getByAlias(alias);
-        UserResponse response = userMapperWeb.toResponse(user);
-        return ResponseEntity.ok(response);
-    }
-
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<List<User>> getAll() {
@@ -88,19 +78,5 @@ public class UserController {
         User userUpdated = userService.updateUser(principal.getId(), user);
         return ResponseEntity.ok(userUpdated);
     }
-
-    @PreAuthorize("hasRole('USER')")
-    @PatchMapping("/update/alias")
-    public ResponseEntity<Void> updateAlias(
-            @AuthenticationPrincipal UserPrincipal principal,
-            @Valid @RequestBody AliasUpdateRequest request
-    ) {
-        userService.updateAlias(principal.getId(), request.alias());
-        return ResponseEntity.noContent().build();
-    }
-
-
-
-
 
 }

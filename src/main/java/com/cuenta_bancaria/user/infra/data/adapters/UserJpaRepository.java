@@ -10,11 +10,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 
 public interface UserJpaRepository extends JpaRepository<UserEntity, Long> {
-    Optional<UserEntity> findByAlias(String alias);
     Optional<UserEntity> findByEmail(String email);
 
     boolean existsByEmail(String email);
-    boolean existsByAlias(String alias);
 
     @Modifying
     @Query("UPDATE UserEntity u SET u.status = false WHERE u.id = :id")

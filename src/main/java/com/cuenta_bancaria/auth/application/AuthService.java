@@ -1,5 +1,7 @@
 package com.cuenta_bancaria.auth.application;
 
+import com.cuenta_bancaria.account.domain.port.AccountRepositoryPort;
+import com.cuenta_bancaria.account.domain.port.AliasGeneratorPort;
 import com.cuenta_bancaria.auth.domain.*;
 import com.cuenta_bancaria.auth.infra.dto.LoginRequest;
 import com.cuenta_bancaria.auth.infra.dto.RegisterRequest;
@@ -18,7 +20,6 @@ public class AuthService {
 
     private final UserRepositoryPort userRepository;
     private final CreateAccountExternalPort accountExternal;
-    private final AliasGeneratorPort aliasGenerator;
     private final IdentityServicePort identityService;
     private final TokenProviderPort tokenProvider;
     private final AuthPasswordEncoderPort authPasswordEncoder;
@@ -29,15 +30,10 @@ public class AuthService {
         if (userRepository.existsByEmail(request.email())) {
             throw new EntityAlreadyExistsException("El email ingresado ya esta registrado");
         }
-//
-//        if (userRepository.existsByAlias(request.alias())) {
-//            throw new EntityAlreadyExistsException("El alias ingresado esta en uso");
-//        }
 
         User user = User.builder()
                 .firstname(request.firstname())
                 .lastname(request.lastname())
-                .alias(generateAlias())
                 .email(request.email())
                 .password(authPasswordEncoder.encodePass(request.password()))
                 .role(User.Role.USER)
@@ -60,14 +56,5 @@ public class AuthService {
 
         return tokenProvider.generateToken(request.email());
     }
-
-    public String generateAlias() {
-        String alias;
-        do {
-            alias = aliasGenerator.generate();
-        } while (userRepository.existsByAlias(alias));
-        return alias;
-    }
-
 
 }

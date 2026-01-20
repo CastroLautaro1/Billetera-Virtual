@@ -1,6 +1,6 @@
 package com.cuenta_bancaria.user.infra.config;
 
-import com.cuenta_bancaria.cuenta.domain.port.AccountServicePort;
+import com.cuenta_bancaria.account.domain.port.AccountServicePort;
 import com.cuenta_bancaria.user.application.UserService;
 import com.cuenta_bancaria.user.domain.port.UserServicePort;
 import com.cuenta_bancaria.user.domain.port.external.AccountCreatorPort;

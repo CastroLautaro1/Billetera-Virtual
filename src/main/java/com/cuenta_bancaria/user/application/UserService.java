@@ -43,12 +43,6 @@ public class UserService implements UserServicePort {
     }
 
     @Override
-    public User getByAlias(String alias) {
-        return userRepository.findByAlias(alias)
-                .orElseThrow(() -> new EntityNotFoundException("El alias no coincide con ningún Usuario"));
-    }
-
-    @Override
     public List<User> getAll() {
         return userRepository.findAll();
     }
@@ -66,7 +60,6 @@ public class UserService implements UserServicePort {
 
         existingUser.setFirstname(userUpdate.getFirstname());
         existingUser.setLastname(userUpdate.getLastname());
-        existingUser.setAlias(userUpdate.getAlias());
         existingUser.setEmail(userUpdate.getEmail());
 
         if (userUpdate.getPassword() != null && !userUpdate.getPassword().isBlank()) {
@@ -76,22 +69,5 @@ public class UserService implements UserServicePort {
         return userRepository.save(existingUser);
     }
 
-    @Override
-    @Transactional
-    public void updateAlias(Long id, String alias) {
 
-        User user = getById(id);
-
-        if (user.getAlias().equals(alias)) {
-            throw new IllegalArgumentException("El alias ingresado es igual al actual");
-        }
-
-        if (userRepository.existsByAlias(alias)) {
-            throw new EntityAlreadyExistsException("El alias ingresado no esta disponible");
-        }
-
-        user.setAlias(alias);
-
-        userRepository.save(user);
-    }
 }

@@ -40,12 +40,6 @@ public class UserJpaAdapter implements UserRepositoryPort {
     }
 
     @Override
-    public Optional<User> findByAlias(String alias) {
-        return userRepository.findByAlias(alias)
-                .map(userMapper::toDomain);
-    }
-
-    @Override
     public List<User> findAll() {
         return userRepository.findAll()
                 .stream()
@@ -61,11 +55,6 @@ public class UserJpaAdapter implements UserRepositoryPort {
     @Override
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
-    }
-
-    @Override
-    public boolean existsByAlias(String alias) {
-        return userRepository.existsByAlias(alias);
     }
 
     @Override

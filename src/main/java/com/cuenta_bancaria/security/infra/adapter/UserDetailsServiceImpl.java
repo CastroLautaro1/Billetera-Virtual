@@ -29,7 +29,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .accountId(accountId)
                 .firstname(user.getFirstname())
                 .lastname(user.getLastname())
-                .alias(user.getAlias())
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .role(user.getRole())
