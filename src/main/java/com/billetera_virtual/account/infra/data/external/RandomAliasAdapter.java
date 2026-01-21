@@ -1,6 +1,6 @@
 package com.billetera_virtual.account.infra.data.external;
 
-import com.billetera_virtual.account.domain.port.AliasGeneratorPort;
+import com.billetera_virtual.account.domain.port.external.AliasGeneratorPort;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;

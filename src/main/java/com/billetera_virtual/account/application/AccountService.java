@@ -176,9 +176,9 @@ public class AccountService implements AccountServicePort {
 
     @Override
     @Transactional
-    public void updateAlias(Long id, String alias) {
+    public void updateAlias(Long idUser, String alias) {
 
-        Account account = getAccountById(id);
+        Account account = getAccountByIdUser(idUser);
 
         if (account.getAlias().equals(alias)) {
             throw new IllegalArgumentException("El alias ingresado es igual al actual");

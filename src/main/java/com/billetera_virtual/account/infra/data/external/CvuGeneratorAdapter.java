@@ -1,6 +1,6 @@
 package com.billetera_virtual.account.infra.data.external;
 
-import com.billetera_virtual.account.domain.port.CvuGeneratorPort;
+import com.billetera_virtual.account.domain.port.external.CvuGeneratorPort;
 import org.springframework.stereotype.Component;
 
 @Component

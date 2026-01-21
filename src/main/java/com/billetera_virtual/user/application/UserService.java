@@ -1,5 +1,6 @@
 package com.billetera_virtual.user.application;
 
+import com.billetera_virtual.exceptions.domain.EntityAlreadyExistsException;
 import com.billetera_virtual.exceptions.domain.EntityNotFoundException;
 import com.billetera_virtual.user.domain.User;
 import com.billetera_virtual.user.domain.port.external.AccountCreatorPort;
@@ -25,6 +26,10 @@ public class UserService implements UserServicePort {
     public User createUser(User user) {
 
         // agregar validaciones
+        if (userRepository.existsByEmail(user.getPassword())) {
+            throw new EntityAlreadyExistsException("El email ingresado ya esta registrado");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(User.Role.USER);
         user.setStatus(true);
 

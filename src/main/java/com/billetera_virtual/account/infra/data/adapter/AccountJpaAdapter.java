@@ -2,8 +2,8 @@ package com.billetera_virtual.account.infra.data.adapter;
 
 import com.billetera_virtual.account.domain.Account;
 import com.billetera_virtual.account.domain.port.AccountRepositoryPort;
-import com.billetera_virtual.account.domain.port.AliasGeneratorPort;
-import com.billetera_virtual.account.domain.port.CvuGeneratorPort;
+import com.billetera_virtual.account.domain.port.external.AliasGeneratorPort;
+import com.billetera_virtual.account.domain.port.external.CvuGeneratorPort;
 import com.billetera_virtual.account.infra.data.entity.AccountEntity;
 import com.billetera_virtual.account.infra.data.mapper.AccountMapper;
 import jakarta.transaction.Transactional;
