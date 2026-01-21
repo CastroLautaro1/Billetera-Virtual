@@ -22,12 +22,12 @@ public class TransactionService implements TransactionServicePort {
 
     @Override
     @Transactional
-    public Transaction makeTransaction(Transaction t, String alias, Long userId) {
+    public Transaction makeTransaction(Transaction t, String destination, Long userId) {
         // 1. Obtengo el AccountId del usuario logueado
         Long originAccountId = accountExternal.getAccountIdByUserId(userId);
 
         // 1.2 Obtengo el ID de la Cuenta de destino mediante el Alias
-        Long counterpartyAccountId = accountExternal.getCounterpartyAccountIdByAlias(alias);
+        Long counterpartyAccountId = accountExternal.getCounterpartyAccountIdByDestination(destination);
 
         // 2. Uso el puerto de cuenta para registrar la transferencia
         double resultingBalance = accountExternal.makeTransaction(originAccountId, counterpartyAccountId, t.getAmount());

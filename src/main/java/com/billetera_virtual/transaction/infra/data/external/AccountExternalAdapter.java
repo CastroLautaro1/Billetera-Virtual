@@ -25,4 +25,9 @@ public class AccountExternalAdapter implements AccountExternalPort {
     public Long getCounterpartyAccountIdByAlias(String alias) {
         return accountService.getAccountIdByAlias(alias);
     }
+
+    @Override
+    public Long getCounterpartyAccountIdByDestination(String destination) {
+        return accountService.getAccountIdByDestination(destination);
+    }
 }

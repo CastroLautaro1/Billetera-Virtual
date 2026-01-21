@@ -18,5 +18,5 @@ public interface AccountServicePort {
     double makeTransaction(Long originId, Long counterpartyId, double amount);
     Long getAccountIdByUserId(Long userId);
     Long getAccountIdByAlias(String alias);
-
+    Long getAccountIdByDestination(String destination);
 }

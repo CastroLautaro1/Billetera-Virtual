@@ -138,6 +138,18 @@ public class AccountService implements AccountServicePort {
     }
 
     @Override
+    public Long getAccountIdByDestination(String destination) {
+        // Si tiene 22 dígitos y son todos números, es un CVU
+        if (destination.matches("\\d{22}")) {
+            Account account = accountRepository.getAccountByCvu(destination)
+                    .orElseThrow(() -> new EntityNotFoundException("CVU no encontrado"));
+            return account.getId();
+        }
+
+        return getAccountIdByAlias(destination);
+    }
+
+    @Override
     public List<Account> getAll() {
         return accountRepository.findAll();
     }

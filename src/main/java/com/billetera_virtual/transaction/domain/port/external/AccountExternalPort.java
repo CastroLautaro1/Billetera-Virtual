@@ -11,4 +11,7 @@ public interface AccountExternalPort {
     // Obtengo el ID de la contraparte usando el alias
     Long getCounterpartyAccountIdByAlias(String alias);
 
+    // Obtengo el ID de la contraparte usando el alias o CVU
+    Long getCounterpartyAccountIdByDestination(String destination);
+
 }

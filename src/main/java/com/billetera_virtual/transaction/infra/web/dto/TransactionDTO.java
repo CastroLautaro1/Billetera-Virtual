@@ -5,8 +5,8 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record TransactionDTO(
-        @NotBlank(message = "El alias de destino es obligatorio")
-        String alias,
+        @NotBlank(message = "El alias o CVU de destino es obligatorio")
+        String destination,
 
         @Positive(message = "El monto debe ser un numero positivo")
         double amount,
