@@ -22,7 +22,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("No hay coincidencias con el email ingresado"));
 
-        Long accountId = accountExternal.getAccountIdByUserId(user.getId());
+        Long accountId = null;
+        // Si el rol es Admin entonces NO busco la Account, ya que no va a tener
+        if (!user.getRole().equals(User.Role.ADMIN)) {
+            accountId = accountExternal.getAccountIdByUserId(user.getId());
+        }
 
         return UserPrincipal.builder()
                 .id(user.getId())

@@ -39,26 +39,25 @@ public class AccountController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{id}")
+    @GetMapping("admin/{id}")
     public ResponseEntity<Account> getById(@PathVariable Long id) {
         Account account = accountService.getAccountById(id);
         return ResponseEntity.ok(account);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/all")
+    @GetMapping("admin/all")
     public ResponseEntity<List<Account>> getAll() {
         List<Account> account = accountService.getAll();
         return ResponseEntity.ok(account);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/me")
     public ResponseEntity<Account> getByAccountId(@AuthenticationPrincipal UserPrincipal user) {
         Account account = accountService.getAccountById(user.getAccountId());
         return ResponseEntity.ok(account);
     }
-
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/alias/{alias}")
@@ -69,14 +68,14 @@ public class AccountController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("admin/{id}")
     public ResponseEntity<Void> deleteAccount(@PathVariable  Long id) {
         accountService.logicallyDeleteById(id);
         return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{id}")
+    @PutMapping("admin/{id}")
     public ResponseEntity<Account> updateAccount(
             @RequestBody AccountUpdateRequest request,
             @PathVariable Long id) {

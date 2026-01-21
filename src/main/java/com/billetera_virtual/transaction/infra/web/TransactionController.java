@@ -28,7 +28,7 @@ public class TransactionController {
     private final TransactionServicePort transactionService;
     private final TransactionMapperWeb transactionMapper;
 
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("/transfer")
     public ResponseEntity<Transaction> makeTransfer(
             @Valid @RequestBody TransactionDTO dto,
@@ -51,7 +51,7 @@ public class TransactionController {
         return ResponseEntity.ok(transaction);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/filter/all")
     public ResponseEntity<Page<Transaction>> getAllByAccountId(
             @AuthenticationPrincipal UserPrincipal principal,
@@ -62,7 +62,7 @@ public class TransactionController {
         return ResponseEntity.ok(transactions);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/filter/{type}")
     public ResponseEntity<List<Transaction>> filterByType(
             @PathVariable Transaction.TransactionType type,
@@ -72,7 +72,7 @@ public class TransactionController {
         return ResponseEntity.ok(transactions);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("filter/amount")
     public ResponseEntity<List<Transaction>> filterByAmount(
             @RequestParam(name = "max") double amount,

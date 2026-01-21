@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{id}")
+    @GetMapping("admin/{id}")
     public ResponseEntity<User> getById(@PathVariable Long id) {
         User user = userService.getById(id);
         return ResponseEntity.ok(user);
@@ -55,20 +55,20 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/all")
+    @GetMapping("admin/all")
     public ResponseEntity<List<User>> getAll() {
         List<User> allUsers = userService.getAll();
         return ResponseEntity.ok(allUsers);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("admin/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.logicallyDeleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasRole('USER')")
     @PutMapping("/update")
     public ResponseEntity<User> updateUser(
             @AuthenticationPrincipal UserPrincipal principal,
