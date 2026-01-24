@@ -62,4 +62,13 @@ public class TransactionJpaAdapter implements TransactionRepositoryPort {
                 .map(transactionMapper::toDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Page<Transaction> findAllWithFilters(Long accountId, Transaction.TransactionType type, Double minAmount, Double maxAmount,
+                                                OffsetDateTime start, OffsetDateTime end, Pageable pageable) {
+        Page<TransactionEntity> transactionEntities = jpaRepository.findAllWithFilters(accountId, type, minAmount, maxAmount,
+                start, end, pageable);
+
+        return transactionEntities.map(transactionMapper::toDomain);
+    }
 }

@@ -16,5 +16,7 @@ public interface TransactionServicePort {
     List<Transaction> filterByType(Transaction.TransactionType type, Long accountId);
     List<Transaction> findAllByAmountLessThan(double amount, Long accountId);
     List<Transaction> getHistoryByDateRange(Long accountId, OffsetDateTime start, OffsetDateTime end);
+    Page<Transaction> getHistory(Long accountId, Transaction.TransactionType type, Double minAmount, Double maxAmount,
+                                 OffsetDateTime start, OffsetDateTime end, Pageable pageable);
 
 }

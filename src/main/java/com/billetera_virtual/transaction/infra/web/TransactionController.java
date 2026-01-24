@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @RestController
@@ -52,33 +54,19 @@ public class TransactionController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/filter/all")
-    public ResponseEntity<Page<Transaction>> getAllByAccountId(
+    @GetMapping("/history")
+    public ResponseEntity<Page<Transaction>> getTransactionHistory(
             @AuthenticationPrincipal UserPrincipal principal,
+            @RequestParam(required = false) Transaction.TransactionType type,
+            @RequestParam(required = false) Double minAmount,
+            @RequestParam(required = false) Double maxAmount,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime end,
             @PageableDefault(size = 10, sort = "timestamp", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Long accountId = principal.getAccountId();
-        Page<Transaction> transactions = transactionService.getAllByAccountId(accountId, pageable);
-        return ResponseEntity.ok(transactions);
-    }
-
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping("/filter/{type}")
-    public ResponseEntity<List<Transaction>> filterByType(
-            @PathVariable Transaction.TransactionType type,
-            @AuthenticationPrincipal UserPrincipal principal) {
-        Long accountId = principal.getAccountId();
-        List<Transaction> transactions = transactionService.filterByType(type, accountId);
-        return ResponseEntity.ok(transactions);
-    }
-
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping("filter/amount")
-    public ResponseEntity<List<Transaction>> filterByAmount(
-            @RequestParam(name = "max") double amount,
-            @AuthenticationPrincipal UserPrincipal principal) {
-        Long accountId = principal.getAccountId();
-        List<Transaction> transactions = transactionService.findAllByAmountLessThan(amount, accountId);
+        Page<Transaction> transactions = transactionService.getHistory(accountId, type, minAmount, maxAmount,
+                start, end, pageable);
         return ResponseEntity.ok(transactions);
     }
 

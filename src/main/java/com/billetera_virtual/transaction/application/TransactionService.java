@@ -78,4 +78,12 @@ public class TransactionService implements TransactionServicePort {
     public List<Transaction> getHistoryByDateRange(Long accountId, OffsetDateTime start, OffsetDateTime end) {
         return List.of();
     }
+
+    @Override
+    public Page<Transaction> getHistory(Long accountId, Transaction.TransactionType type, Double minAmount, Double maxAmount,
+                                        OffsetDateTime start, OffsetDateTime end, Pageable pageable) {
+
+
+        return transactionRepository.findAllWithFilters(accountId, type, minAmount, maxAmount, start, end, pageable);
+    }
 }

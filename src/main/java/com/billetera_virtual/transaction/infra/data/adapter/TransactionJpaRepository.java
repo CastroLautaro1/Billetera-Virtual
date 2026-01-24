@@ -37,6 +37,21 @@ public interface TransactionJpaRepository extends JpaRepository<TransactionEntit
                                                @Param("start") OffsetDateTime start,
                                                @Param("end") OffsetDateTime end);
 
-
+    @Query("SELECT t FROM TransactionEntity t WHERE " +
+           "(t.originAccountId = :accountId OR t.counterpartyAccountId = :accountId) AND " +
+           "(:type IS NULL OR t.transactionType = :type) AND " +
+           "(:min IS NULL OR t.amount >= :min) AND " +
+           "(:max IS NULL OR t.amount <= :max) AND " +
+           "(CAST(:start AS timestamp) IS NULL OR t.timestamp >= :start) AND " +
+           "(CAST(:end AS timestamp) IS NULL OR t.timestamp <= :end)")
+    Page<TransactionEntity> findAllWithFilters(
+            @Param("accountId") Long accountId,
+            @Param("type")Transaction.TransactionType type,
+            @Param("min") Double minAmount,
+            @Param("max") Double maxAmount,
+            @Param("start") OffsetDateTime start,
+            @Param("end") OffsetDateTime end,
+            Pageable pageable
+    );
 
 }
