@@ -1,6 +1,7 @@
 package com.billetera_virtual.account.domain.port;
 
 import com.billetera_virtual.account.domain.Account;
+import com.billetera_virtual.account.domain.dto.AccountPublicDataResponse;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ public interface AccountServicePort {
     Account getAccountByIdUser(Long idUser);
     Account getAccountByAlias(String alias);
     Account getAccountByCvu(String cvu);
+    AccountPublicDataResponse getAccountPublicData(String identifier);
     List<Account> getAll();
     Account updateAccount(Long id, double balance);
     void updateAlias(Long id, String alias);

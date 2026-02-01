@@ -1,6 +1,7 @@
 package com.billetera_virtual.account.infra.web;
 
 import com.billetera_virtual.account.domain.Account;
+import com.billetera_virtual.account.domain.dto.AccountPublicDataResponse;
 import com.billetera_virtual.account.domain.port.AccountServicePort;
 import com.billetera_virtual.account.infra.web.dto.AccountRequest;
 import com.billetera_virtual.account.infra.web.dto.AccountUpdateRequest;
@@ -60,10 +61,9 @@ public class AccountController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    @GetMapping("/alias/{alias}")
-    public ResponseEntity<Account> getByAlias(@PathVariable String alias) {
-        Account account = accountService.getAccountByAlias(alias);
-        // Account response = userMapperWeb.toResponse(user); mapear a cuenta
+    @GetMapping("/search/{identifier}")
+    public ResponseEntity<AccountPublicDataResponse> getByDestination(@PathVariable String identifier) {
+        AccountPublicDataResponse account = accountService.getAccountPublicData(identifier);
         return ResponseEntity.ok(account);
     }
 

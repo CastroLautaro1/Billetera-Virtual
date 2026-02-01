@@ -1,7 +1,7 @@
 package com.billetera_virtual.user.infra.web.dto;
 
 
-public record UserResponse(
+public record UserDataResponse(
         String firstname,
         String lastname
 ) {

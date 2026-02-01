@@ -1,8 +1,11 @@
 package com.billetera_virtual.account.application;
 
 import com.billetera_virtual.account.domain.Account;
+import com.billetera_virtual.account.domain.dto.AccountPublicDataResponse;
+import com.billetera_virtual.account.domain.dto.UserDataDTO;
 import com.billetera_virtual.account.domain.port.AccountRepositoryPort;
 import com.billetera_virtual.account.domain.port.AccountServicePort;
+import com.billetera_virtual.account.domain.port.external.UserDataPort;
 import com.billetera_virtual.exceptions.domain.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +19,7 @@ import java.util.Optional;
 public class AccountService implements AccountServicePort {
 
     private final AccountRepositoryPort accountRepository;
+    private final UserDataPort userData;
 
     @Override
     public Account createAccount(Account account) {
@@ -118,6 +122,23 @@ public class AccountService implements AccountServicePort {
         }
 
         return account;
+    }
+
+    @Override
+    public AccountPublicDataResponse getAccountPublicData(String identifier) {
+        // Obtengo el Id de la Cuenta segun su Alias o CVU
+        Long accountId = getAccountIdByDestination(identifier);
+
+        Account account = getAccountById(accountId);
+
+        // Obtengo el nombre y apellido del Usuario mediante su Id
+        UserDataDTO data = userData.getUserDataById(account.getUser_id());
+
+        return new AccountPublicDataResponse(
+                data.firstname(),
+                data.lastname(),
+                account.getCvu(),
+                account.getAlias());
     }
 
     @Override

@@ -39,31 +39,6 @@ public class TransactionJpaAdapter implements TransactionRepositoryPort {
     }
 
     @Override
-    public List<Transaction> filterByType(Transaction.TransactionType type, Long accountId) {
-        List<TransactionEntity> list = jpaRepository.findAllByTransactionType(type, accountId);
-        return list.stream()
-                .map(transactionMapper::toDomain)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Transaction> findAllByAmountLessThan(double amount, Long accountId) {
-        List<TransactionEntity> list = jpaRepository.findAllByAmountLessThan(amount, accountId);
-        return list.stream()
-                .map(transactionMapper::toDomain)
-                .collect(Collectors.toList());
-    }
-
-    // Revisar la logica de este metodo
-    @Override
-    public List<Transaction> getHistoryByDateRange(Long accountId, OffsetDateTime start, OffsetDateTime end) {
-        List<TransactionEntity> list = jpaRepository.findHistoryByDates(accountId, start, end);
-        return list.stream()
-                .map(transactionMapper::toDomain)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public Page<Transaction> findAllWithFilters(Long accountId, Transaction.TransactionType type, Double minAmount, Double maxAmount,
                                                 OffsetDateTime start, OffsetDateTime end, Pageable pageable) {
         Page<TransactionEntity> transactionEntities = jpaRepository.findAllWithFilters(accountId, type, minAmount, maxAmount,

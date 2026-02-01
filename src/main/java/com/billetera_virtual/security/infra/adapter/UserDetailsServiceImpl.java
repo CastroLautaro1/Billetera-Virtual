@@ -5,6 +5,7 @@ import com.billetera_virtual.transaction.domain.port.external.AccountExternalPor
 import com.billetera_virtual.user.domain.User;
 import com.billetera_virtual.user.domain.port.UserRepositoryPort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -25,6 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Long accountId = null;
         // Si el rol es Admin entonces NO busco la Account, ya que no va a tener
         if (!user.getRole().equals(User.Role.ADMIN)) {
+            System.out.println("Entra al condicional");
             accountId = accountExternal.getAccountIdByUserId(user.getId());
         }
 

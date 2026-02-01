@@ -5,9 +5,12 @@ import com.billetera_virtual.account.domain.port.AccountRepositoryPort;
 import com.billetera_virtual.account.domain.port.AccountServicePort;
 import com.billetera_virtual.account.domain.port.external.AliasGeneratorPort;
 import com.billetera_virtual.account.domain.port.external.CvuGeneratorPort;
+import com.billetera_virtual.account.domain.port.external.UserDataPort;
 import com.billetera_virtual.account.infra.data.adapter.AccountJpaAdapter;
 import com.billetera_virtual.account.infra.data.adapter.AccountJpaRepository;
+import com.billetera_virtual.account.infra.data.external.UserDataAdapter;
 import com.billetera_virtual.account.infra.data.mapper.AccountMapper;
+import com.billetera_virtual.user.domain.port.UserServicePort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,7 +26,7 @@ public class AccountBeansConfig {
     }
 
     @Bean
-    public AccountServicePort accountServicePort(AccountRepositoryPort repositoryPort) {
-        return new AccountService(repositoryPort);
+    public AccountServicePort accountServicePort(AccountRepositoryPort repositoryPort, UserDataPort userDataPort) {
+        return new AccountService(repositoryPort, userDataPort);
     }
 }

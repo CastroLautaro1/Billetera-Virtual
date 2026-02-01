@@ -43,11 +43,6 @@ public class TransactionService implements TransactionServicePort {
     }
 
     @Override
-    public Page<Transaction> getAllByAccountId(Long accountId, Pageable pageable) {
-        return transactionRepository.getAllByAccountId(accountId, pageable);
-    }
-
-    @Override
     public Transaction getById(Long id) {
         Optional<Transaction> transactionOpt = transactionRepository.getById(id);
         Transaction transaction;
@@ -59,24 +54,6 @@ public class TransactionService implements TransactionServicePort {
             throw  new EntityNotFoundException("El ID de la transaccion no existe");
         }
         return transaction;
-    }
-
-    @Override
-    public List<Transaction> filterByType(Transaction.TransactionType type, Long accountId) {
-        if (type == null) {
-            throw new IllegalArgumentException("El tipo de transaccion no puede ser nulo");
-        }
-        return transactionRepository.filterByType(type, accountId);
-    }
-
-    @Override
-    public List<Transaction> findAllByAmountLessThan(double amount, Long accountId) {
-        return transactionRepository.findAllByAmountLessThan(amount, accountId);
-    }
-
-    @Override
-    public List<Transaction> getHistoryByDateRange(Long accountId, OffsetDateTime start, OffsetDateTime end) {
-        return List.of();
     }
 
     @Override
