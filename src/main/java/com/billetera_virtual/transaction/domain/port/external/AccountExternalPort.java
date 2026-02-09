@@ -1,9 +1,11 @@
 package com.billetera_virtual.transaction.domain.port.external;
 
+import java.math.BigDecimal;
+
 public interface AccountExternalPort {
 
     // Con esos parametros el modulo Account se puede encargar de realizar la transaccion
-    double makeTransaction(Long originId, Long counterpartyId, double amount);
+    BigDecimal makeTransaction(Long originId, Long counterpartyId, BigDecimal amount);
 
     // Obtengo el ID de la cuenta para guardarlo en la transaccion
     Long getAccountIdByUserId(Long userId);

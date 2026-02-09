@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +31,7 @@ public class TransactionService implements TransactionServicePort {
         Long counterpartyAccountId = accountExternal.getCounterpartyAccountIdByDestination(destination);
 
         // 2. Uso el puerto de cuenta para registrar la transferencia
-        double resultingBalance = accountExternal.makeTransaction(originAccountId, counterpartyAccountId, t.getAmount());
+        BigDecimal resultingBalance = accountExternal.makeTransaction(originAccountId, counterpartyAccountId, t.getAmount());
 
         // 3. Completo la informacion de los campos que faltan
         t.setTransactionType(Transaction.TransactionType.TRANSFER);

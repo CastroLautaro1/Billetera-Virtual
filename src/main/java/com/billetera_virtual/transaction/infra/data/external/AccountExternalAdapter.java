@@ -5,6 +5,8 @@ import com.billetera_virtual.transaction.domain.port.external.AccountExternalPor
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 @RequiredArgsConstructor
 public class AccountExternalAdapter implements AccountExternalPort {
@@ -12,7 +14,7 @@ public class AccountExternalAdapter implements AccountExternalPort {
     private final AccountServicePort accountService;
 
     @Override
-    public double makeTransaction(Long originId, Long counterpartyId, double amount) {
+    public BigDecimal makeTransaction(Long originId, Long counterpartyId, BigDecimal amount) {
         return accountService.makeTransaction(originId, counterpartyId, amount);
     }
 

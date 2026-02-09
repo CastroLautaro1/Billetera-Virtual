@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +17,7 @@ public class Account {
     private Long user_id;
     private String cvu;
     private String alias;
-    private double balance;
+    private BigDecimal balance;
     private boolean status;
 
 }

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Data
@@ -17,8 +18,8 @@ public class Transaction {
     private TransactionType transactionType;
     private Long originAccountId;
     private Long counterpartyAccountId;
-    private double amount;
-    private double resultingBalance;
+    private BigDecimal amount;
+    private BigDecimal resultingBalance;
     private String details;
     private OffsetDateTime timestamp;
 

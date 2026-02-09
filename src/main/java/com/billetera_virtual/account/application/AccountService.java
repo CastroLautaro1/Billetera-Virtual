@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public class AccountService implements AccountServicePort {
             throw new EntityAlreadyExistsException("El ID de Usuario ya esta asociado a una cuenta, no puede tener otra");
         }
 
-        if(account.getBalance() < 0) {
+        if(account.getBalance().compareTo(BigDecimal.ZERO) <= 0) {
             throw new InsufficientBalanceException("El saldo de la cuenta no puede ser inferior a 0");
         }
 
@@ -51,9 +52,9 @@ public class AccountService implements AccountServicePort {
 
     @Override
     @Transactional
-    public double makeTransaction(Long originAccountId, Long counterpartyAccountId, double amount) {
+    public BigDecimal makeTransaction(Long originAccountId, Long counterpartyAccountId, BigDecimal amount) {
 
-        if (amount <= 0) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new InvalidAmountException("El monto no puede ser igual o menor a 0");
         }
 
@@ -68,7 +69,7 @@ public class AccountService implements AccountServicePort {
             throw new EntityInactiveException("La cuenta de origen se encuentra deshabilitada");
         }
 
-        if (origin.getBalance() < amount) {
+        if (origin.getBalance().compareTo(amount) < 0) {
             throw new InsufficientBalanceException("Saldo insuficiente en la cuenta. Saldo: " + origin.getBalance() + ", Monto: " + amount);
         }
 
@@ -80,8 +81,8 @@ public class AccountService implements AccountServicePort {
         }
 
         // Realizo la operacion en el balance de ambas cuentas
-        origin.setBalance(origin.getBalance() - amount);
-        counterparty.setBalance(counterparty.getBalance() + amount);
+        origin.setBalance(origin.getBalance().subtract(amount));
+        counterparty.setBalance(counterparty.getBalance().add(amount));
 
         accountRepository.save(origin);
         accountRepository.save(counterparty);
@@ -198,7 +199,7 @@ public class AccountService implements AccountServicePort {
     }
 
     @Override
-    public Account updateAccount(Long id, double balance) {
+    public Account updateAccount(Long id, BigDecimal balance) {
 
         // hacer validacion que verifique que el ID pertenece al Usuario logueado
 
@@ -208,7 +209,7 @@ public class AccountService implements AccountServicePort {
             throw new EntityInactiveException("La cuenta se encuentra inhabilitada");
         }
 
-        if(balance < 0) {
+        if(balance.compareTo(BigDecimal.ZERO) < 0) {
             throw new InsufficientBalanceException("El saldo de la cuenta no puede ser inferior a 0");
         }
 
