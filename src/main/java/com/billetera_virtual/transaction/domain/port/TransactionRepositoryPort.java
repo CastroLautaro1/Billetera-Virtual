@@ -15,5 +15,5 @@ public interface TransactionRepositoryPort {
     Optional<Transaction> getById(Long id);
     Page<Transaction> findAllWithFilters(Long accountId, Transaction.TransactionType type, Double minAmount, Double maxAmount,
                                  OffsetDateTime start, OffsetDateTime end, Pageable pageable);
-
+    Page<Transaction> findAll(Pageable pageable);
 }

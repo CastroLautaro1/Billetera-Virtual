@@ -14,5 +14,7 @@ public interface TransactionServicePort {
     Transaction getById(Long id);
     Page<Transaction> getHistory(Long accountId, Transaction.TransactionType type, Double minAmount, Double maxAmount,
                                  OffsetDateTime start, OffsetDateTime end, Pageable pageable);
+    Page<Transaction> getAllTransactions(Pageable pageable);
+    Page<Transaction> getAllByUserId(Long userId, Pageable pageable);
 
 }

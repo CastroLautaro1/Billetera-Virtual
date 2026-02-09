@@ -46,4 +46,11 @@ public class TransactionJpaAdapter implements TransactionRepositoryPort {
 
         return transactionEntities.map(transactionMapper::toDomain);
     }
+
+    @Override
+    public Page<Transaction> findAll(Pageable pageable) {
+        Page<TransactionEntity> transactionEntities = jpaRepository.findAll(pageable);
+
+        return transactionEntities.map(transactionMapper::toDomain);
+    }
 }

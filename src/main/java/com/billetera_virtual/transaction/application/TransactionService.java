@@ -64,4 +64,17 @@ public class TransactionService implements TransactionServicePort {
 
         return transactionRepository.findAllWithFilters(accountId, type, minAmount, maxAmount, start, end, pageable);
     }
+
+    @Override
+    public Page<Transaction> getAllTransactions(Pageable pageable) {
+        return transactionRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Transaction> getAllByUserId(Long userId, Pageable pageable) {
+        // Obtengo el AccountId mediante el UserId
+        Long accountId = accountExternal.getAccountIdByUserId(userId);
+
+        return transactionRepository.getAllByAccountId(accountId, pageable);
+    }
 }

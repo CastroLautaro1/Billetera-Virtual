@@ -103,4 +103,22 @@ public class TransactionController {
         return ResponseEntity.ok(transactions);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin/all")
+    public ResponseEntity<Page<Transaction>> getAll(
+            @PageableDefault(size = 20, sort = "timestamp", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Page<Transaction> transactions = transactionService.getAllTransactions(pageable);
+        return ResponseEntity.ok(transactions);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/admin/{userId}")
+    public ResponseEntity<Page<Transaction>> getAllByUserId(
+            @PathVariable Long userId,
+            @PageableDefault(size = 20, sort = "timestamp", direction = Sort.Direction.DESC)Pageable pageable
+    ) {
+        Page<Transaction> transactions = transactionService.getAllByUserId(userId, pageable);
+        return ResponseEntity.ok(transactions);
+    }
 }

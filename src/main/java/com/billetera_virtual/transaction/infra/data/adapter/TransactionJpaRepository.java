@@ -54,4 +54,7 @@ public interface TransactionJpaRepository extends JpaRepository<TransactionEntit
             Pageable pageable
     );
 
+    @Query("SELECT t FROM TransactionEntity t")
+    Page<TransactionEntity> findAll(Pageable pageable);
+
 }
