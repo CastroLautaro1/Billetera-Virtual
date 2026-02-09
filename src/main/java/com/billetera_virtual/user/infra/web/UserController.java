@@ -31,29 +31,6 @@ public class UserController {
     private final UserMapperWeb userMapperWeb;
 
     @Operation(
-            summary = "Crear un usuario (Solo Admin)",
-            description = "El Admin puede crear un usuario ingresando los campos: firstname, lastname, email y password. También se creara la cuenta correspondiente para el usuario creado."
-    )
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Usuario creado",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = User.class)))
-    })
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/create")
-    public ResponseEntity<User> createUser(@Valid @RequestBody CreateUserRequest request) {
-        User user = userMapperWeb.toDomain(request);
-        User createdUser = userService.createUser(user);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(createdUser.getId())
-                .toUri();
-
-        return ResponseEntity.created(location).body(createdUser);
-    }
-
-    @Operation(
             summary = "Obtener usuario por Id (Solo Admin)",
             description = "Se obtiene un usuario ingresando su Id."
     )

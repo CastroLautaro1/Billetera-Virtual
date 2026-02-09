@@ -9,8 +9,7 @@ import java.util.List;
 
 public interface TransactionServicePort {
 
-    Transaction makeTransaction(Transaction t, String alias, Long userId);
-    // Busca ya sea en base al originId o al counterpartyId
+    Transaction makeTransaction(Transaction t, String destination, Long userId);
     Transaction getById(Long id);
     Page<Transaction> getHistory(Long accountId, Transaction.TransactionType type, Double minAmount, Double maxAmount,
                                  OffsetDateTime start, OffsetDateTime end, Pageable pageable);

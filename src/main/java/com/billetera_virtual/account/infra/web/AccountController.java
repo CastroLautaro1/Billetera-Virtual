@@ -32,27 +32,6 @@ public class AccountController {
     private final AccountMapperWeb accountMapperWeb;
 
     @Operation(
-            summary = "Crear nueva cuenta bancaria (Solo Admin)",
-            description = "Registra una nueva cuenta asociada a un usuario existente. Genera automáticamente el CVU y un alias único si no se proporcionan. Requiere privilegios de ADMINISTRADOR."
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Cuenta creada exitosamente.",
-                    content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Account.class)))
-    })
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/create")
-    public ResponseEntity<Account> createAccount(@RequestBody AccountRequest request) {
-        Account accountDomain = accountMapperWeb.toDomain(request);
-        Account account = accountService.createAccount(accountDomain);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(account.getId())
-                .toUri();
-        return ResponseEntity.created(location).body(account);
-    }
-
-    @Operation(
             summary = "Obtener cuenta por Id (Solo Admin)",
             description = "Se obtiene una cuenta ingresando su Id."
     )
@@ -92,7 +71,8 @@ public class AccountController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Cuenta del usuario",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Account.class)))
+                            schema = @Schema(implementation = Account.class))),
+            @ApiResponse(responseCode = "400", description = "Cuenta no encontrada")
     })
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/me")
@@ -109,7 +89,9 @@ public class AccountController {
             @ApiResponse(responseCode = "200", description = "DTO con el nombre completo de un usuario y su alias y CVU",
                     content = @Content(mediaType = "application/json",
                             schema = @Schema(implementation = AccountPublicDataResponse.class))),
-            @ApiResponse(responseCode = "404", description = "No se encontraron cuentas con ese Alias o CVU")
+            @ApiResponse(responseCode = "404", description = "No se encontraron cuentas con ese Alias o CVU"),
+            @ApiResponse(responseCode = "409", description = "La cuenta se encuentra deshabilitada"),
+            @ApiResponse(responseCode = "400", description = "No puedes realizar una transferencia a tu propia cuenta")
     })
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/search/{identifier}")
@@ -141,7 +123,9 @@ public class AccountController {
             description = "El usuario actualiza el alias de su cuenta, en caso de que quiera reemplazar el alias génerico."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Alias actualizado")
+            @ApiResponse(responseCode = "204", description = "Alias actualizado"),
+            @ApiResponse(responseCode = "400", description = "El alias ingresado es igual al actual"),
+            @ApiResponse(responseCode = "409", description = "El alias ingresado no está disponible")
     })
     @PreAuthorize("hasRole('USER')")
     @PatchMapping("/alias")

@@ -22,25 +22,6 @@ public class UserService implements UserServicePort {
     private final PasswordEncoderPort passwordEncoder;
 
     @Override
-    @Transactional
-    public User createUser(User user) {
-
-        // agregar validaciones
-        if (userRepository.existsByEmail(user.getPassword())) {
-            throw new EntityAlreadyExistsException("El email ingresado ya esta registrado");
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(User.Role.USER);
-        user.setStatus(true);
-
-        User savedUser = userRepository.save(user);
-
-        accountCreator.createInitialAccount(savedUser.getId());
-
-        return savedUser;
-    }
-
-    @Override
     public User getById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("El ID no coincide con ningún Usuario"));

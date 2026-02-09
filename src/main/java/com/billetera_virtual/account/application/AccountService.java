@@ -23,24 +23,6 @@ public class AccountService implements AccountServicePort {
     private final UserDataPort userData;
 
     @Override
-    public Account createAccount(Account account) {
-
-        // agregar validacion que verifique si el idUser existe
-
-        if(accountRepository.existsByIdUser(account.getUser_id())) {
-            throw new EntityAlreadyExistsException("El ID de Usuario ya esta asociado a una cuenta, no puede tener otra");
-        }
-
-        if(account.getBalance().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new InsufficientBalanceException("El saldo de la cuenta no puede ser inferior a 0");
-        }
-
-        account.setStatus(true);
-
-        return accountRepository.save(account);
-    }
-
-    @Override
     public Account createAccountFromUser(Long userId) {
 
         if(accountRepository.existsByIdUser(userId)) {
@@ -225,7 +207,7 @@ public class AccountService implements AccountServicePort {
         Account account = getAccountByIdUser(idUser);
 
         if (account.getAlias().equals(alias)) {
-            throw new IllegalArgumentException("El alias ingresado es igual al actual");
+            throw new InvalidRequestException("El alias ingresado es igual al actual");
         }
 
         if (accountRepository.existsByAlias(alias)) {

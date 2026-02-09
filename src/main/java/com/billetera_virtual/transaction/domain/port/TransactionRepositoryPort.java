@@ -11,9 +11,11 @@ import java.util.Optional;
 public interface TransactionRepositoryPort {
 
     Transaction save(Transaction t);
-    Page<Transaction> getAllByAccountId(Long accountId, Pageable pageable);
     Optional<Transaction> getById(Long id);
     Page<Transaction> findAllWithFilters(Long accountId, Transaction.TransactionType type, Double minAmount, Double maxAmount,
-                                 OffsetDateTime start, OffsetDateTime end, Pageable pageable);
+                                         OffsetDateTime start, OffsetDateTime end, Pageable pageable);
     Page<Transaction> findAll(Pageable pageable);
+    Page<Transaction> getAllByAccountId(Long accountId, Pageable pageable);
+
+
 }

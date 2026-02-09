@@ -27,12 +27,6 @@ public class TransactionJpaAdapter implements TransactionRepositoryPort {
     }
 
     @Override
-    public Page<Transaction> getAllByAccountId(Long accountId, Pageable pageable) {
-        return jpaRepository.findAllByAccountId(accountId, pageable)
-                .map(transactionMapper::toDomain);
-    }
-
-    @Override
     public Optional<Transaction> getById(Long id) {
         return jpaRepository.findById(id)
                 .map(transactionMapper::toDomain);
@@ -52,5 +46,11 @@ public class TransactionJpaAdapter implements TransactionRepositoryPort {
         Page<TransactionEntity> transactionEntities = jpaRepository.findAll(pageable);
 
         return transactionEntities.map(transactionMapper::toDomain);
+    }
+
+    @Override
+    public Page<Transaction> getAllByAccountId(Long accountId, Pageable pageable) {
+        return jpaRepository.findAllByAccountId(accountId, pageable)
+                .map(transactionMapper::toDomain);
     }
 }

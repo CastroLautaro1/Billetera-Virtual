@@ -39,9 +39,11 @@ public class TransactionController {
             description = "El usuario realiza una transferencia a otra cuenta, mediante un Alias o CVU. El dinero utilizado será el de la propia cuenta del usuario logueado y la transacción quedará registrada."
     )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Transacción exitosa",
+            @ApiResponse(responseCode = "201", description = "Transacción exitosa",
                     content = @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Transaction.class)))
+                            schema = @Schema(implementation = Transaction.class))),
+            @ApiResponse(responseCode = "400", description = "Error en la solicitud (Validaciones de negocio)"),
+            @ApiResponse(responseCode = "409", description = "La cuenta de origen o de destino se encuentra deshabilitada")
     })
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/transfer")
@@ -103,6 +105,15 @@ public class TransactionController {
         return ResponseEntity.ok(transactions);
     }
 
+    @Operation(
+            summary = "Obtener todas las transacciones del sistema",
+            description = "El Admin obtiene todas las transacciones del sistemas paginas, ordenas desde la mas reciente"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Transacciones paginadas",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Transaction.class)))
+    })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/all")
     public ResponseEntity<Page<Transaction>> getAll(
@@ -112,6 +123,16 @@ public class TransactionController {
         return ResponseEntity.ok(transactions);
     }
 
+    @Operation(
+            summary = "Obtener todas las transacciones de un usuario",
+            description = "El Admin obtiene todas las transacciones de un usuario mediante su ID"
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Transacciones del usuario seleccionado",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Transaction.class))),
+            @ApiResponse(responseCode = "404", description = "El ID ingresado no coincide con ninguna cuenta")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/{userId}")
     public ResponseEntity<Page<Transaction>> getAllByUserId(

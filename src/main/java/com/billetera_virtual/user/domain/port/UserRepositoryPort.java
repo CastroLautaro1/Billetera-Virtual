@@ -8,11 +8,14 @@ import java.util.Optional;
 public interface UserRepositoryPort {
 
     User save(User user);
+
+    List<User> findAll();
     Optional<User> findById(Long id);
     Optional<User> findByEmail(String email);
-    List<User> findAll();
+
     boolean existsById(Long id);
     boolean existsByEmail(String email);
+
     void logicallyDeleteById(Long id);
 
 }

@@ -6,10 +6,12 @@ import java.util.List;
 
 public interface UserServicePort {
 
-    User createUser(User user);
-    User getById(Long id);
     List<User> getAll();
-    void logicallyDeleteById(Long id);
+    User getById(Long id);
+
     User updateUser(Long id, User user);
+
+    void logicallyDeleteById(Long id);
+
 
 }
