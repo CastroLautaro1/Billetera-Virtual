@@ -11,7 +11,7 @@ public interface AccountServicePort {
     Account getAccountByIdUser(Long idUser);
     Account getAccountByAlias(String alias);
     Account getAccountByCvu(String cvu);
-    AccountPublicDataResponse getAccountPublicData(String identifier);
+    AccountPublicDataResponse getAccountPublicData(String identifier, Long accountId);
     List<Account> getAll();
     Account updateAccount(Long id, double balance);
     void updateAlias(Long id, String alias);

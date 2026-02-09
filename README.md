@@ -60,9 +60,9 @@ Las transacciones podran ser visualizadas en un historial, el cual podra filtrar
 
 - `GET /user/profile`: Obtiene datos del usuario autenticado.
 - `GET /account/me`: Obtiene datos de la cuenta del usuario autenticado
-- `PUT /user/update`: Actualización personalizada de los datos del usuario.
+- `PUT /user/`: Actualización personalizada de los datos del usuario.
 
 **Transacciones**
 
 - `POST /transaction/transfer`: Realiza una transferencia validando saldo y existencia del alias.
-- `GET /transaction/filter/all` : Obtiene el historial paginado con filtros opcionales de monto.
+- `GET /transaction/history` : Obtiene el historial paginado con filtros opcionales de monto.

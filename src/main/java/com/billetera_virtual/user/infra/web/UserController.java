@@ -130,7 +130,7 @@ public class UserController {
                             schema = @Schema(implementation = User.class)))
     })
     @PreAuthorize("hasRole('USER')")
-    @PutMapping("/update")
+    @PutMapping("/")
     public ResponseEntity<User> updateUser(
             @AuthenticationPrincipal UserPrincipal principal,
             @Valid @RequestBody CreateUserRequest request

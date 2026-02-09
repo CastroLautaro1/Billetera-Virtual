@@ -58,7 +58,7 @@ public class AccountService implements AccountServicePort {
         }
 
         if (originAccountId.equals(counterpartyAccountId)) {
-            throw new IllegalArgumentException("La cuenta de origen y destino no pueden ser la misma");
+            throw new InvalidRequestException("La cuenta de origen y destino no pueden ser la misma");
         }
 
         // Obtengo la cuenta de origen, usando el account_id
@@ -125,16 +125,26 @@ public class AccountService implements AccountServicePort {
     }
 
     @Override
-    public AccountPublicDataResponse getAccountPublicData(String identifier) {
+    public AccountPublicDataResponse getAccountPublicData(String identifier, Long authenticatedAccountId) {
         // Obtengo el Id de la Cuenta segun su Alias o CVU
-        Long accountId = getAccountIdByDestination(identifier);
+        Long destinationAccountId = getAccountIdByDestination(identifier);
 
-        Account account = getAccountById(accountId);
+        Account account = getAccountById(destinationAccountId);
+
+        if (!account.isStatus()) {
+            throw new EntityInactiveException("La cuenta buscada se encuentra deshabilitada.");
+        }
+
+        // Valido que el Usuario autenticado no se busque a si mismo
+        if (destinationAccountId.equals(authenticatedAccountId)) {
+            throw new InvalidRequestException("No puedes realizar una transferencia a tu propia cuenta");
+        }
 
         // Obtengo el nombre y apellido del Usuario mediante su Id
         UserDataDTO data = userData.getUserDataById(account.getUser_id());
 
         return new AccountPublicDataResponse(
+                account.getId(),
                 data.firstname(),
                 data.lastname(),
                 account.getCvu(),

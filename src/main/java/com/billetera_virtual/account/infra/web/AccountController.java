@@ -113,8 +113,11 @@ public class AccountController {
     })
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/search/{identifier}")
-    public ResponseEntity<AccountPublicDataResponse> getByDestination(@PathVariable String identifier) {
-        AccountPublicDataResponse account = accountService.getAccountPublicData(identifier);
+    public ResponseEntity<AccountPublicDataResponse> getByDestination(
+            @PathVariable String identifier,
+            @AuthenticationPrincipal UserPrincipal user
+    ) {
+        AccountPublicDataResponse account = accountService.getAccountPublicData(identifier, user.getAccountId());
         return ResponseEntity.ok(account);
     }
 
@@ -141,7 +144,7 @@ public class AccountController {
             @ApiResponse(responseCode = "204", description = "Alias actualizado")
     })
     @PreAuthorize("hasRole('USER')")
-    @PatchMapping("/update/alias")
+    @PatchMapping("/alias")
     public ResponseEntity<Void> updateAlias(
             @AuthenticationPrincipal UserPrincipal principal,
             @Valid @RequestBody AliasUpdateRequest request

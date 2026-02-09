@@ -40,6 +40,11 @@ public class GlobalExceptionHandler {
         return buildError("INVALID_AMOUNT", ex.getMessage(), HttpStatus.BAD_REQUEST, null);
     }
 
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<ErrorResponse> invalidRequest(InvalidRequestException ex) {
+        return buildError("INVALID_REQUEST", ex.getMessage(), HttpStatus.BAD_REQUEST, null);
+    }
+
     // Captura errores de los Records
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
