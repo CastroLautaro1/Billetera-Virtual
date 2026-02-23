@@ -8,6 +8,7 @@ public interface UserServicePort {
 
     List<User> getAll();
     User getById(Long id);
+    User getUserDataByAccountId(Long accountId);
 
     User updateUser(Long id, User user);
 

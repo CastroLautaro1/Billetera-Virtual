@@ -3,7 +3,8 @@ package com.billetera_virtual.user.infra.web;
 import com.billetera_virtual.security.infra.model.UserPrincipal;
 import com.billetera_virtual.user.domain.User;
 import com.billetera_virtual.user.domain.port.UserServicePort;
-import com.billetera_virtual.user.infra.web.dto.CreateUserRequest;
+import com.billetera_virtual.user.infra.web.dto.UpdateUserRequest;
+import com.billetera_virtual.user.infra.web.dto.UserFullnameResponse;
 import com.billetera_virtual.user.infra.web.dto.UserProfileResponse;
 import com.billetera_virtual.user.infra.web.mapper.UserMapperWeb;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,9 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -62,6 +60,24 @@ public class UserController {
        User user = userService.getById(principal.getId());
        UserProfileResponse profile = userMapperWeb.toProfileResponse(user);
        return ResponseEntity.ok(profile);
+    }
+
+    @Operation(
+            summary = "Obtener el nombre completo de un Usuario",
+            description = "Mediante el Account ID se obtiene el nombre completo de el dueño de la cuenta."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "DTO con el firstname y lastname del usuario",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = User.class))),
+            @ApiResponse(responseCode = "404", description = "No se encontro ninguna cuenta con el ID ingresado")
+    })
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/fullname/{accountId}")
+    public ResponseEntity<UserFullnameResponse> getUserData(@PathVariable Long accountId) {
+        User user = userService.getUserDataByAccountId(accountId);
+        UserFullnameResponse userData = userMapperWeb.toResponse(user);
+        return ResponseEntity.ok(userData);
     }
 
     @Operation(
@@ -110,7 +126,7 @@ public class UserController {
     @PutMapping("/")
     public ResponseEntity<User> updateUser(
             @AuthenticationPrincipal UserPrincipal principal,
-            @Valid @RequestBody CreateUserRequest request
+            @Valid @RequestBody UpdateUserRequest request
     ) {
         User user = userMapperWeb.toDomain(request);
         User userUpdated = userService.updateUser(principal.getId(), user);

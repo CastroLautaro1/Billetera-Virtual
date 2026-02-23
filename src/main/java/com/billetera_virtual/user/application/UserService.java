@@ -1,11 +1,10 @@
 package com.billetera_virtual.user.application;
 
-import com.billetera_virtual.exceptions.domain.EntityAlreadyExistsException;
 import com.billetera_virtual.exceptions.domain.EntityNotFoundException;
 import com.billetera_virtual.user.domain.User;
-import com.billetera_virtual.user.domain.port.external.AccountCreatorPort;
 import com.billetera_virtual.user.domain.port.UserRepositoryPort;
 import com.billetera_virtual.user.domain.port.UserServicePort;
+import com.billetera_virtual.user.domain.port.external.AccountDataExternalPort;
 import com.billetera_virtual.user.domain.port.external.PasswordEncoderPort;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +17,8 @@ import java.util.List;
 public class UserService implements UserServicePort {
 
     private final UserRepositoryPort userRepository;
-    private final AccountCreatorPort accountCreator;
     private final PasswordEncoderPort passwordEncoder;
+    private final AccountDataExternalPort accountDataExternalPort;
 
     @Override
     public User getById(Long id) {
@@ -32,6 +31,12 @@ public class UserService implements UserServicePort {
         return userRepository.findAll();
     }
 
+    @Override
+    public User getUserDataByAccountId(Long accountId) {
+        Long user_id = accountDataExternalPort.getUserIdByAccountId(accountId);
+
+        return getById(user_id);
+    }
 
     @Override
     public void logicallyDeleteById(Long id) {

@@ -135,6 +135,20 @@ public class AccountService implements AccountServicePort {
     }
 
     @Override
+    public AccountPublicDataResponse getAccountPublicDataById(Long id) {
+        Account account = getAccountById(id);
+        UserDataDTO data = userData.getUserDataById(account.getUser_id());
+
+        return new AccountPublicDataResponse(
+                account.getId(),
+                data.firstname(),
+                data.lastname(),
+                account.getAlias(),
+                account.getCvu()
+        );
+    }
+
+    @Override
     public Account getAccountByAlias(String alias) {
         return accountRepository.getAccountByAlias(alias)
                 .orElseThrow(() -> new EntityNotFoundException("El alias no coincide con ninguna Cuenta"));

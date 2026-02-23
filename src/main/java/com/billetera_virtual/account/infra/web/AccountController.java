@@ -3,7 +3,6 @@ package com.billetera_virtual.account.infra.web;
 import com.billetera_virtual.account.domain.Account;
 import com.billetera_virtual.account.domain.dto.AccountPublicDataResponse;
 import com.billetera_virtual.account.domain.port.AccountServicePort;
-import com.billetera_virtual.account.infra.web.dto.AccountRequest;
 import com.billetera_virtual.account.infra.web.dto.AliasUpdateRequest;
 import com.billetera_virtual.account.infra.web.mapper.AccountMapperWeb;
 import com.billetera_virtual.security.infra.model.UserPrincipal;
@@ -18,9 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -100,6 +97,22 @@ public class AccountController {
             @AuthenticationPrincipal UserPrincipal user
     ) {
         AccountPublicDataResponse account = accountService.getAccountPublicData(identifier, user.getAccountId());
+        return ResponseEntity.ok(account);
+    }
+
+    @Operation(
+            summary = "Obtener datos de un usuario mediante su ID",
+            description = "Se ingresa el ID de una cuenta para obtener el nombre completo del usuario y poder confirmar la identidad del destinatario."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "DTO con el nombre completo de un usuario y su alias y CVU",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = AccountPublicDataResponse.class))),
+            @ApiResponse(responseCode = "404", description = "No se encontraron cuentas con ese Id"),
+    })
+    @GetMapping("/data/{id}")
+    public ResponseEntity<AccountPublicDataResponse> getPublicDataById(@PathVariable Long id) {
+        AccountPublicDataResponse account = accountService.getAccountPublicDataById(id);
         return ResponseEntity.ok(account);
     }
 

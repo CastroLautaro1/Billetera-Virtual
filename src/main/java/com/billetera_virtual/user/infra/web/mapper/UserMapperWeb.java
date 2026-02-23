@@ -1,8 +1,8 @@
 package com.billetera_virtual.user.infra.web.mapper;
 
 import com.billetera_virtual.user.domain.User;
-import com.billetera_virtual.user.infra.web.dto.CreateUserRequest;
-import com.billetera_virtual.user.infra.web.dto.UserDataResponse;
+import com.billetera_virtual.user.infra.web.dto.UpdateUserRequest;
+import com.billetera_virtual.user.infra.web.dto.UserFullnameResponse;
 import com.billetera_virtual.user.infra.web.dto.UserProfileResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValuePropertyMappingStrategy;
@@ -13,9 +13,9 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 )
 public interface UserMapperWeb {
 
-    User toDomain(CreateUserRequest request);
+    User toDomain(UpdateUserRequest request);
 
-    UserDataResponse toResponse(User user);
+    UserFullnameResponse toResponse(User user);
 
     UserProfileResponse toProfileResponse(User user);
 }

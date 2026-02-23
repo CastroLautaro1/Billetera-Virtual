@@ -10,9 +10,6 @@ public interface AccountExternalPort {
     // Obtengo el ID de la cuenta para guardarlo en la transaccion
     Long getAccountIdByUserId(Long userId);
 
-    // Obtengo el ID de la contraparte usando el alias
-    Long getCounterpartyAccountIdByAlias(String alias);
-
     // Obtengo el ID de la contraparte usando el alias o CVU
     Long getCounterpartyAccountIdByDestination(String destination);
 

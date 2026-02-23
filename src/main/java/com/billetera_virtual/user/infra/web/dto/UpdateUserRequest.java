@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 
-public record CreateUserRequest(
+public record UpdateUserRequest(
         @NotBlank(message = "El nombre es obligatorio")
         @Size(min = 2, max = 50, message = "El nombre debe tener entre 2 y 50 caracteres")
         String firstname,

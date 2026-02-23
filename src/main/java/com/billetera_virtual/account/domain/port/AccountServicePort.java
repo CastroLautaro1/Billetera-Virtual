@@ -17,6 +17,7 @@ public interface AccountServicePort {
     Account getAccountByAlias(String alias);
     Account getAccountByCvu(String cvu);
     AccountPublicDataResponse getAccountPublicData(String identifier, Long accountId);
+    AccountPublicDataResponse getAccountPublicDataById(Long id);
     Long getAccountIdByUserId(Long userId);
     Long getAccountIdByAlias(String alias);
     Long getAccountIdByDestination(String destination);
