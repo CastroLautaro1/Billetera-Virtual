@@ -1,6 +1,8 @@
 package com.billetera_virtual.transaction.infra.data.external;
 
+import com.billetera_virtual.account.domain.dto.AccountPublicDataResponse;
 import com.billetera_virtual.account.domain.port.AccountServicePort;
+import com.billetera_virtual.transaction.domain.dto.TransactionAccountInfo;
 import com.billetera_virtual.transaction.domain.port.external.AccountExternalPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -27,4 +29,16 @@ public class AccountExternalAdapter implements AccountExternalPort {
     public Long getCounterpartyAccountIdByDestination(String destination) {
         return accountService.getAccountIdByDestination(destination);
     }
+
+    @Override
+    public TransactionAccountInfo getAccountDataById(Long accountId) {
+        AccountPublicDataResponse publicData = accountService.getAccountPublicDataById(accountId);
+
+        return new TransactionAccountInfo(
+                publicData.firstname() + " " + publicData.lastname(),
+                publicData.cvu(),
+                publicData.alias()
+        );
+    }
+
 }

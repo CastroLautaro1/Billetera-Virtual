@@ -102,7 +102,7 @@ public class AccountController {
 
     @Operation(
             summary = "Obtener datos de un usuario mediante su ID",
-            description = "Se ingresa el ID de una cuenta para obtener el nombre completo del usuario y poder confirmar la identidad del destinatario."
+            description = "Se ingresa el ID de una cuenta para obtener el nombre completo del usuario junto con su alias y CVU."
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "DTO con el nombre completo de un usuario y su alias y CVU",

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Oran Receipt</title>
+    <style>
+        body {
+            font-family: 'Helvetica', sans-serif;
+            background-color: #f4f4f4;
+            padding: 40px;
+        }
+        .card {
+            background-color: #1e1e1e; /* Fondo oscuro */
+            border: 1px solid #ff6600; /* Borde naranja fino */
+            border-radius: 12px;
+            padding: 30px 35px;
+            width: 450px;
+            margin: 0 auto;
+            color: white;
+        }
+
+        /* CABECERA */
+        .header { margin-bottom: 25px; }
+
+        .brand-name {
+            margin-bottom: 15px;
+            font-size: 26px;
+            font-weight: bold;
+            color: white;
+        }
+        .title { font-size: 20px; font-weight: bold; margin-bottom: 5px; color: white; }
+        .date { color: #aaaaaa; font-size: 12px; margin-bottom: 20px; }
+
+        .divider { border-top: 1px solid #333333; margin: 15px 0; }
+
+        /* MONTO Y DETALLE (Alineados a la izquierda) */
+        .amount-container { margin: 20px 0; }
+        .amount { color: #ff6600; font-size: 32px; font-weight: bold; margin-bottom: 5px; }
+        .detail { color: #ffffff; font-size: 14px; font-weight: bold; }
+
+        /* CUENTAS */
+        .section-label { color: #aaaaaa; font-size: 12px; margin-bottom: 5px; margin-top: 20px; }
+        .account-name { color: #ff6600; font-size: 16px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
+        .account-data { color: #cccccc; font-size: 12px; margin-bottom: 3px; }
+    </style>
+</head>
+
+<body>
+<div class="card">
+    <div class="header">
+        <div class="brand-name">Oran</div>
+        <div class="title">Comprobante de transferencia</div>
+        <div class="date" th:text="${date}">Viernes, 20 de febrero de 2026 a las 16:54 hs</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="amount-container">
+        <div class="amount" th:text="${'$' + amount}">$0.00</div>
+        <div class="detail" th:text="${'Detalle: ' + details}">Detalle: Pago</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-label">Cuenta de origen</div>
+    <div class="account-name" th:text="${originName}">NOMBRE ORIGEN</div>
+    <div class="account-data" th:text="${'CVU: ' + originCvu}">CVU: 0000000000000000000000</div>
+    <div class="account-data">Oran</div>
+
+    <div class="section-label">Cuenta de destino</div>
+    <div class="account-name" th:text="${destinationName}">NOMBRE DESTINO</div>
+    <div class="account-data" th:text="${'CVU: ' + destinationCvu}">CVU: 0000000000000000000000</div>
+    <div class="account-data">Oran</div>
+</div>
+</body>
+</html>

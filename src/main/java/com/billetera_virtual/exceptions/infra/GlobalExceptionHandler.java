@@ -45,6 +45,11 @@ public class GlobalExceptionHandler {
         return buildError("INVALID_REQUEST", ex.getMessage(), HttpStatus.BAD_REQUEST, null);
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> accessDenied(AccessDeniedException ex) {
+        return buildError("ACCESS_DENIED", ex.getMessage(), HttpStatus.FORBIDDEN, null);
+    }
+
     // Captura errores de los Records
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {

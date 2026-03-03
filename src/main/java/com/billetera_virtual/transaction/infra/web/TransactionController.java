@@ -17,6 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -61,9 +64,25 @@ public class TransactionController {
         return ResponseEntity.created(location).body(saved);
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/{id}/receipt")
+    public ResponseEntity<byte []>generateReceipt(@PathVariable Long id) {
+        byte [] pdfBytes = transactionService.generateReceipt(id);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+
+        // Con attachment de va a descargar al instante, existe tambien la opcion "inline"
+        // para que se abra una ventana aparte para descargar el pdf
+        String filename = "Comprobante_Oran_" + id + ".pdf";
+        headers.setContentDispositionFormData("attachment", filename);
+
+        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+    }
+
     @Operation(
-            summary = "Obtener una reseña por su Id (Solo Admin)",
-            description = "El Admin ingresa el Id de una transferencia y obtiene información de la misma. "
+            summary = "Obtener una reseña por su Id",
+            description = "Mediante el ID de la URL se obtiene una transaccion. Para ello es necesario validar que el usuario sea administrador o que la transaccion pertenesca a la cuenta del usuario."
     )
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Transaccón existente obtenida",
@@ -71,10 +90,12 @@ public class TransactionController {
                             schema = @Schema(implementation = Transaction.class))),
             @ApiResponse(responseCode = "404", description = "No se encontraron transacciones con ese ID")
     })
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{id}")
-    public ResponseEntity<Transaction> getById(@PathVariable Long id) {
-        Transaction transaction = transactionService.getById(id);
+    public ResponseEntity<Transaction> getById(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserPrincipal principal) {
+        Transaction transaction = transactionService.getById(id, principal.getAccountId(), String.valueOf(principal.getRole()));
         return ResponseEntity.ok(transaction);
     }
 

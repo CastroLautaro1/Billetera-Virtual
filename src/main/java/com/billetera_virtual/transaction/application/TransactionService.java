@@ -1,10 +1,13 @@
 package com.billetera_virtual.transaction.application;
 
+import com.billetera_virtual.exceptions.domain.AccessDeniedException;
 import com.billetera_virtual.exceptions.domain.EntityNotFoundException;
 import com.billetera_virtual.transaction.domain.Transaction;
+import com.billetera_virtual.transaction.domain.dto.TransactionAccountInfo;
 import com.billetera_virtual.transaction.domain.port.TransactionRepositoryPort;
 import com.billetera_virtual.transaction.domain.port.TransactionServicePort;
 import com.billetera_virtual.transaction.domain.port.external.AccountExternalPort;
+import com.billetera_virtual.transaction.domain.port.external.ReceiptGeneratorPort;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,14 +15,13 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 public class TransactionService implements TransactionServicePort {
 
     private final TransactionRepositoryPort transactionRepository;
     private final AccountExternalPort accountExternal;
+    private final ReceiptGeneratorPort receiptGenerator;
 
     @Override
     @Transactional
@@ -44,16 +46,32 @@ public class TransactionService implements TransactionServicePort {
     }
 
     @Override
-    public Transaction getById(Long id) {
-        Optional<Transaction> transactionOpt = transactionRepository.getById(id);
-        Transaction transaction;
+    public byte[] generateReceipt(Long id) {
+        Transaction tx = transactionRepository.getById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Transaccion no encontrada"));
 
-        if (transactionOpt.isPresent()) {
-            transaction = transactionOpt.get();
+        TransactionAccountInfo origin = accountExternal.getAccountDataById(tx.getOriginAccountId());
+        TransactionAccountInfo destination = accountExternal.getAccountDataById(tx.getCounterpartyAccountId());
+
+        return receiptGenerator.generateReceipt(tx, origin, destination);
+    }
+
+    @Override
+    public Transaction getById(Long id, Long accountId, String role) {
+        Transaction transaction = transactionRepository.getById(id)
+                .orElseThrow(() -> new EntityNotFoundException("El ID ingresado no coincide con ninguna transaccion"));
+
+        // Si el usuario es Admin entonces puede obtener la transaccion
+        if (role.equals("ADMIN")) {
+            return transaction;
         }
-        else {
-            throw  new EntityNotFoundException("El ID de la transaccion no existe");
+
+        // Si no es Admin, valido que la transaccion le pertenesca, ya sea como origen o contraparte
+        if (!transaction.getOriginAccountId().equals(accountId)
+                && !transaction.getCounterpartyAccountId().equals(accountId)) {
+            throw new AccessDeniedException("La transaccion no pertenece al usuario.");
         }
+
         return transaction;
     }
 
