@@ -17,11 +17,5 @@ public record UpdateUserRequest(
 
         @NotBlank(message = "El email es obligatorio")
         @Email(message = "El formato del email no es valido")
-        String email,
-
-        @NotBlank(message = "La contraseña es obligatoria")
-        @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
-        @Pattern(regexp = ".*[A-Z].*", message = "La contraseña debe contener al menos una mayúscula")
-        @Pattern(regexp = ".*[0-9].*", message = "La contraseña debe contener al menos un número")
-        String password
+        String email
 ){}

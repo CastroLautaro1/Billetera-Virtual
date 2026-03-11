@@ -3,6 +3,7 @@ package com.billetera_virtual.user.infra.web;
 import com.billetera_virtual.security.infra.model.UserPrincipal;
 import com.billetera_virtual.user.domain.User;
 import com.billetera_virtual.user.domain.port.UserServicePort;
+import com.billetera_virtual.user.infra.web.dto.UpdatePasswordRequest;
 import com.billetera_virtual.user.infra.web.dto.UpdateUserRequest;
 import com.billetera_virtual.user.infra.web.dto.UserFullnameResponse;
 import com.billetera_virtual.user.infra.web.dto.UserProfileResponse;
@@ -131,6 +132,16 @@ public class UserController {
         User user = userMapperWeb.toDomain(request);
         User userUpdated = userService.updateUser(principal.getId(), user);
         return ResponseEntity.ok(userUpdated);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PutMapping("/password")
+    public ResponseEntity<Void> updatePassword(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @Valid @RequestBody UpdatePasswordRequest request
+    ) {
+        userService.updatePassword(principal.getId(), request.password(), request.newPassword());
+        return ResponseEntity.noContent().build();
     }
 
 }

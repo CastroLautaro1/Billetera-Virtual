@@ -59,5 +59,14 @@ public class UserService implements UserServicePort {
         return userRepository.save(existingUser);
     }
 
+    @Override
+    public void updatePassword(Long id, String password, String newPassword) {
+        User existingUser = getById(id);
 
+        if(password.equals(existingUser.getPassword())) {
+            existingUser.setPassword(passwordEncoder.encode(newPassword));
+        }
+
+        userRepository.save(existingUser);
+    }
 }
