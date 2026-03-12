@@ -220,11 +220,13 @@ public class AccountService implements AccountServicePort {
 
         Account account = getAccountByIdUser(idUser);
 
-        if (account.getAlias().equals(alias)) {
+        String cleanAlias = alias.trim();
+
+        if (account.getAlias().equals(cleanAlias)) {
             throw new InvalidRequestException("El alias ingresado es igual al actual");
         }
 
-        if (accountRepository.existsByAlias(alias)) {
+        if (accountRepository.existsByAlias(cleanAlias)) {
             throw new EntityAlreadyExistsException("El alias ingresado no esta disponible");
         }
 

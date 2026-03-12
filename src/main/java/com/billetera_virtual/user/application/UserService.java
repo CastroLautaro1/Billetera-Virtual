@@ -1,6 +1,8 @@
 package com.billetera_virtual.user.application;
 
+import com.billetera_virtual.exceptions.domain.EntityAlreadyExistsException;
 import com.billetera_virtual.exceptions.domain.EntityNotFoundException;
+import com.billetera_virtual.exceptions.domain.InvalidRequestException;
 import com.billetera_virtual.user.domain.User;
 import com.billetera_virtual.user.domain.port.UserRepositoryPort;
 import com.billetera_virtual.user.domain.port.UserServicePort;
@@ -48,24 +50,28 @@ public class UserService implements UserServicePort {
     public User updateUser(Long id, User userUpdate) {
         User existingUser = getById(id);
 
+        if(userRepository.existsByEmail(userUpdate.getEmail()) &&
+                !existingUser.getEmail().equals(userUpdate.getEmail())) {
+          throw new EntityAlreadyExistsException("El email ingresado ya esta en uso");
+        }
+
         existingUser.setFirstname(userUpdate.getFirstname());
         existingUser.setLastname(userUpdate.getLastname());
         existingUser.setEmail(userUpdate.getEmail());
-
-        if (userUpdate.getPassword() != null && !userUpdate.getPassword().isBlank()) {
-            existingUser.setPassword(passwordEncoder.encode(userUpdate.getPassword()));
-        }
 
         return userRepository.save(existingUser);
     }
 
     @Override
+    @Transactional
     public void updatePassword(Long id, String password, String newPassword) {
         User existingUser = getById(id);
 
-        if(password.equals(existingUser.getPassword())) {
-            existingUser.setPassword(passwordEncoder.encode(newPassword));
+        if(!passwordEncoder.matches(password, existingUser.getPassword())) {
+            throw new InvalidRequestException("La contraseña actual es incorrecta");
         }
+
+        existingUser.setPassword(passwordEncoder.encode(newPassword));
 
         userRepository.save(existingUser);
     }
