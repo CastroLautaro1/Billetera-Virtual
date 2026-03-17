@@ -43,7 +43,13 @@ public interface TransactionJpaRepository extends JpaRepository<TransactionEntit
            "(:min IS NULL OR t.amount >= :min) AND " +
            "(:max IS NULL OR t.amount <= :max) AND " +
            "(CAST(:start AS timestamp) IS NULL OR t.timestamp >= :start) AND " +
-           "(CAST(:end AS timestamp) IS NULL OR t.timestamp <= :end)")
+           "(CAST(:end AS timestamp) IS NULL OR t.timestamp <= :end) AND " +
+           "(CAST(:name AS string) IS NULL OR EXISTS (" +
+               "SELECT 1 FROM AccountEntity a, UserEntity u WHERE a.userId = u.id " +
+               "AND (a.id = t.originAccountId OR a.id = t.counterpartyAccountId) " +
+               "AND a.id <> :accountId " +
+               "AND LOWER(CONCAT(CAST(u.firstname AS string), ' ', CAST(u.lastname AS string))) LIKE LOWER(CONCAT('%', CAST(:name AS string), '%'))" +
+           "))")
     Page<TransactionEntity> findAllWithFilters(
             @Param("accountId") Long accountId,
             @Param("type")Transaction.TransactionType type,
@@ -51,6 +57,7 @@ public interface TransactionJpaRepository extends JpaRepository<TransactionEntit
             @Param("max") Double maxAmount,
             @Param("start") OffsetDateTime start,
             @Param("end") OffsetDateTime end,
+            @Param("name") String name,
             Pageable pageable
     );
 

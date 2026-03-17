@@ -34,9 +34,9 @@ public class TransactionJpaAdapter implements TransactionRepositoryPort {
 
     @Override
     public Page<Transaction> findAllWithFilters(Long accountId, Transaction.TransactionType type, Double minAmount, Double maxAmount,
-                                                OffsetDateTime start, OffsetDateTime end, Pageable pageable) {
+                                                OffsetDateTime start, OffsetDateTime end, String name, Pageable pageable) {
         Page<TransactionEntity> transactionEntities = jpaRepository.findAllWithFilters(accountId, type, minAmount, maxAmount,
-                start, end, pageable);
+                start, end, name, pageable);
 
         return transactionEntities.map(transactionMapper::toDomain);
     }

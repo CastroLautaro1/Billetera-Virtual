@@ -13,7 +13,7 @@ public interface TransactionRepositoryPort {
     Transaction save(Transaction t);
     Optional<Transaction> getById(Long id);
     Page<Transaction> findAllWithFilters(Long accountId, Transaction.TransactionType type, Double minAmount, Double maxAmount,
-                                         OffsetDateTime start, OffsetDateTime end, Pageable pageable);
+                                         OffsetDateTime start, OffsetDateTime end, String name, Pageable pageable);
     Page<Transaction> findAll(Pageable pageable);
     Page<Transaction> getAllByAccountId(Long accountId, Pageable pageable);
 

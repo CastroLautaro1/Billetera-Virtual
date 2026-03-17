@@ -77,10 +77,10 @@ public class TransactionService implements TransactionServicePort {
 
     @Override
     public Page<Transaction> getHistory(Long accountId, Transaction.TransactionType type, Double minAmount, Double maxAmount,
-                                        OffsetDateTime start, OffsetDateTime end, Pageable pageable) {
+                                        OffsetDateTime start, OffsetDateTime end, String name, Pageable pageable) {
 
-
-        return transactionRepository.findAllWithFilters(accountId, type, minAmount, maxAmount, start, end, pageable);
+        String cleanName = (name != null && !name.trim().isEmpty()) ? name.trim() : null;
+        return transactionRepository.findAllWithFilters(accountId, type, minAmount, maxAmount, start, end, cleanName, pageable);
     }
 
     @Override

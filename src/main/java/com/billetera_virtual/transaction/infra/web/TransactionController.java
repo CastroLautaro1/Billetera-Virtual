@@ -118,11 +118,12 @@ public class TransactionController {
             @RequestParam(required = false) Double maxAmount,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime start,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime end,
+            @RequestParam(required = false) String name,
             @PageableDefault(size = 10, sort = "timestamp", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Long accountId = principal.getAccountId();
         Page<Transaction> transactions = transactionService.getHistory(accountId, type, minAmount, maxAmount,
-                start, end, pageable);
+                start, end, name, pageable);
         return ResponseEntity.ok(transactions);
     }
 
