@@ -59,7 +59,8 @@ Las transacciones podran ser visualizadas en un historial, el cual podra filtrar
 **Cuentas y Usuarios**
 
 - `GET /user/profile`: Obtiene datos del usuario autenticado.
-- `GET /account/me`: Obtiene datos de la cuenta del usuario autenticado
+- `GET /account/me`: Obtiene datos de la cuenta del usuario autenticado.
+- `GET /account/search/{identifier}`: Obtiene los datos de un usuario mediante el Alias o CVU.
 - `PUT /user/`: Actualización personalizada de los datos del usuario.
 
 **Transacciones**
