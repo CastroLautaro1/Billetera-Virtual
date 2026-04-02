@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Optional;
 
 public interface TransactionRepositoryPort {
@@ -16,6 +15,6 @@ public interface TransactionRepositoryPort {
                                          OffsetDateTime start, OffsetDateTime end, String name, Pageable pageable);
     Page<Transaction> findAll(Pageable pageable);
     Page<Transaction> getAllByAccountId(Long accountId, Pageable pageable);
-
+    Optional<Transaction> findByIdempotencyKey(String idempotencyKey);
 
 }

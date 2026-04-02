@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface TransactionJpaRepository extends JpaRepository<TransactionEntity, Long> {
 
@@ -63,5 +64,7 @@ public interface TransactionJpaRepository extends JpaRepository<TransactionEntit
 
     @Query("SELECT t FROM TransactionEntity t")
     Page<TransactionEntity> findAll(Pageable pageable);
+
+    Optional<TransactionEntity> findByIdempotencyKey(String idempotencyKey);
 
 }

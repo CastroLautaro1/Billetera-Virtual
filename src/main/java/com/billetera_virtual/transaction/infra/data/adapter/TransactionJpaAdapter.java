@@ -53,4 +53,10 @@ public class TransactionJpaAdapter implements TransactionRepositoryPort {
         return jpaRepository.findAllByAccountId(accountId, pageable)
                 .map(transactionMapper::toDomain);
     }
+
+    @Override
+    public Optional<Transaction> findByIdempotencyKey(String idempotencyKey) {
+        return jpaRepository.findByIdempotencyKey(idempotencyKey)
+                .map(transactionMapper::toDomain);
+    }
 }
