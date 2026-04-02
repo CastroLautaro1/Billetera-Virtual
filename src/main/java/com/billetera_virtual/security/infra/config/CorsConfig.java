@@ -16,7 +16,7 @@ public class CorsConfig {
                 registry.addMapping("/**") // Permitir todos los endpoints
                         .allowedOrigins("http://localhost:4200") // URL de tu proyecto Angular
                         .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
+                        .allowedHeaders("Authorization", "Cache-Control", "Content-Type", "Idempotency-Key")
                         .allowCredentials(true);
             }
         };
