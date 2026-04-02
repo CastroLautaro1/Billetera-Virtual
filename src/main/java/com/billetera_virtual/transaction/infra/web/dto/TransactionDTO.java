@@ -16,4 +16,5 @@ public record TransactionDTO(
         BigDecimal amount,
 
         @Size(max = 100, message = "El detalle es demasiado largo")
-        String details){}
+        String details
+){}

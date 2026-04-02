@@ -51,12 +51,13 @@ public class TransactionController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/transfer")
     public ResponseEntity<Transaction> makeTransfer(
+            @RequestHeader(value = "Idempotency-Key") String idempotencyKey,
             @Valid @RequestBody TransactionDTO dto,
             @AuthenticationPrincipal UserPrincipal principal)
     {
         Long userId = principal.getId();
         Transaction transaction = transactionMapper.toDomain(dto);
-        Transaction saved = transactionService.makeTransaction(transaction, dto.destination(), userId);
+        Transaction saved = transactionService.makeTransaction(transaction, dto.destination(), userId, idempotencyKey);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(saved.getId())
