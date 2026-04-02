@@ -22,6 +22,7 @@ public class Transaction {
     private BigDecimal resultingBalance;
     private String details;
     private OffsetDateTime timestamp;
+    private String idempotencyKey;
 
     public enum TransactionType {
         DEPOSIT, TRANSFER, WITHDRAWAL

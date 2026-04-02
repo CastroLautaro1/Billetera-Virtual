@@ -43,5 +43,8 @@ public class TransactionEntity {
     @Column(nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime timestamp;
 
+    @Column(name="idempotency_key", unique = true)
+    private String idempotencyKey;
+
 
 }
