@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface TransactionServicePort {
 
-    Transaction makeTransaction(Transaction t, String destination, Long userId);
+    Transaction makeTransaction(Transaction t, String destination, Long userId, String idempotenceKey);
     byte [] generateReceipt(Long id);
 
     Transaction getById(Long id, Long accountId, String role);

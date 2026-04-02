@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class TransactionService implements TransactionServicePort {
@@ -25,7 +26,12 @@ public class TransactionService implements TransactionServicePort {
 
     @Override
     @Transactional
-    public Transaction makeTransaction(Transaction t, String destination, Long userId) {
+    public Transaction makeTransaction(Transaction t, String destination, Long userId, String idempotencyKey) {
+        Optional<Transaction> existingTransaction = transactionRepository.findByIdempotencyKey(idempotencyKey);
+        if(existingTransaction.isPresent()) {
+            return existingTransaction.get();
+        }
+
         // 1. Obtengo el AccountId del usuario logueado
         Long originAccountId = accountExternal.getAccountIdByUserId(userId);
 
@@ -41,6 +47,7 @@ public class TransactionService implements TransactionServicePort {
         t.setCounterpartyAccountId(counterpartyAccountId);
         t.setResultingBalance(resultingBalance);
         t.setTimestamp(OffsetDateTime.now());
+        t.setIdempotencyKey(idempotencyKey);
 
         return transactionRepository.save(t);
     }
