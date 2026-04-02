@@ -9,6 +9,7 @@ import com.billetera_virtual.account.infra.data.mapper.AccountMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ public class AccountJpaAdapter implements AccountRepositoryPort {
         // Recibo el Id del Usuario y creo la cuenta correspondiente
         AccountEntity entity = AccountEntity.builder()
                 .userId(idUser)
-                .balance(0)
+                .balance(BigDecimal.ZERO)
                 .alias(generateAlias()) // Se genera el alias
                 .status(true)
                 .build();
