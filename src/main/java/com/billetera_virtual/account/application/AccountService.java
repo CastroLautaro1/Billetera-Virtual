@@ -107,6 +107,7 @@ public class AccountService implements AccountServicePort {
         return account;
     }
 
+    // Devuelve la informacion de una cuenta cuando se busca por alias o CVU, solo si esta activa
     @Override
     public AccountPublicDataResponse getAccountPublicData(String identifier, Long authenticatedAccountId) {
         // Obtengo el Id de la Cuenta segun su Alias o CVU
@@ -134,18 +135,24 @@ public class AccountService implements AccountServicePort {
                 account.getAlias());
     }
 
+    // Devuelve la informacion de una cuenta, solo si esta activa
     @Override
     public AccountPublicDataResponse getAccountPublicDataById(Long id) {
         Account account = getAccountById(id);
-        UserDataDTO data = userData.getUserDataById(account.getUser_id());
 
-        return new AccountPublicDataResponse(
-                account.getId(),
-                data.firstname(),
-                data.lastname(),
-                account.getAlias(),
-                account.getCvu()
-        );
+        if(!account.isStatus()) {
+            throw new EntityInactiveException("La cuenta se encuentra dada de baja.");
+        }
+
+        return buildAccountResponse(account);
+    }
+
+    // Devuelve la informacion de una cuenta para mostrarla en el recibo
+    @Override
+    public AccountPublicDataResponse getAccountReceipt(Long id) {
+        Account account = getAccountById(id);
+
+        return buildAccountResponse(account);
     }
 
     @Override
@@ -233,5 +240,18 @@ public class AccountService implements AccountServicePort {
         account.setAlias(alias);
 
         accountRepository.save(account);
+    }
+
+    // ------- METODOS AUXILIARES --------
+    private AccountPublicDataResponse buildAccountResponse(Account account) {
+        UserDataDTO data = userData.getUserDataById(account.getUser_id());
+
+        return new AccountPublicDataResponse(
+                account.getId(),
+                data.firstname(),
+                data.lastname(),
+                account.getAlias(),
+                account.getCvu()
+        );
     }
 }
