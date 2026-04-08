@@ -2,6 +2,7 @@ package com.billetera_virtual.transaction.domain.port;
 
 import com.billetera_virtual.transaction.domain.Transaction;
 import com.billetera_virtual.transaction.domain.dto.TransactionAccountInfo;
+import com.billetera_virtual.transaction.domain.dto.TransactionReceiptInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,5 +19,5 @@ public interface TransactionServicePort {
                                  OffsetDateTime start, OffsetDateTime end, String name, Pageable pageable);
     Page<Transaction> getAllTransactions(Pageable pageable);
     Page<Transaction> getAllByUserId(Long userId, Pageable pageable);
-
+    TransactionReceiptInfo getTransactionReceipt(Long transactionId, Long accountId, String role);
 }

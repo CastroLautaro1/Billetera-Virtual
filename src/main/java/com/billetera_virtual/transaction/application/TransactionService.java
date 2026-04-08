@@ -4,6 +4,7 @@ import com.billetera_virtual.exceptions.domain.AccessDeniedException;
 import com.billetera_virtual.exceptions.domain.EntityNotFoundException;
 import com.billetera_virtual.transaction.domain.Transaction;
 import com.billetera_virtual.transaction.domain.dto.TransactionAccountInfo;
+import com.billetera_virtual.transaction.domain.dto.TransactionReceiptInfo;
 import com.billetera_virtual.transaction.domain.port.TransactionRepositoryPort;
 import com.billetera_virtual.transaction.domain.port.TransactionServicePort;
 import com.billetera_virtual.transaction.domain.port.external.AccountExternalPort;
@@ -57,8 +58,8 @@ public class TransactionService implements TransactionServicePort {
         Transaction tx = transactionRepository.getById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Transaccion no encontrada"));
 
-        TransactionAccountInfo origin = accountExternal.getAccountDataById(tx.getOriginAccountId());
-        TransactionAccountInfo destination = accountExternal.getAccountDataById(tx.getCounterpartyAccountId());
+        TransactionAccountInfo origin = accountExternal.getAccountReceipt(tx.getOriginAccountId());
+        TransactionAccountInfo destination = accountExternal.getAccountReceipt(tx.getCounterpartyAccountId());
 
         return receiptGenerator.generateReceipt(tx, origin, destination);
     }
@@ -80,6 +81,27 @@ public class TransactionService implements TransactionServicePort {
         }
 
         return transaction;
+    }
+
+    @Override
+    public TransactionReceiptInfo getTransactionReceipt(Long transactionId, Long accountId, String role) {
+        Transaction transaction = getById(transactionId, accountId, role);
+
+        TransactionAccountInfo originInfo = accountExternal.getAccountReceipt(transaction.getOriginAccountId());
+        TransactionAccountInfo destinationInfo = accountExternal.getAccountReceipt(transaction.getCounterpartyAccountId());
+
+        return new TransactionReceiptInfo(
+                transaction.getId(),
+                transaction.getTransactionType(),
+                transaction.getAmount(),
+                transaction.getResultingBalance(),
+                transaction.getDetails(),
+                transaction.getTimestamp(),
+                originInfo.fullname(),
+                originInfo.cvu(),
+                destinationInfo.fullname(),
+                destinationInfo.cvu()
+        );
     }
 
     @Override
