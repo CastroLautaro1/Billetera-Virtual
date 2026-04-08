@@ -41,4 +41,14 @@ public class AccountExternalAdapter implements AccountExternalPort {
         );
     }
 
+    @Override
+    public TransactionAccountInfo getAccountReceipt(Long accountId) {
+        AccountPublicDataResponse publicData = accountService.getAccountReceipt(accountId);
+
+        return new TransactionAccountInfo(
+                publicData.firstname() + " " + publicData.lastname(),
+                publicData.cvu(),
+                publicData.alias()
+        );
+    }
 }
