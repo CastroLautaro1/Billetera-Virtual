@@ -53,6 +53,22 @@ public class TransactionService implements TransactionServicePort {
         return transactionRepository.save(t);
     }
 
+    @Transactional
+    @Override
+    public void createDeposit(Long accountId, BigDecimal amount, BigDecimal resultingBalance, String idempotenceKey) {
+        Transaction tx = new Transaction();
+
+        tx.setTransactionType(Transaction.TransactionType.DEPOSIT);
+        tx.setCounterpartyAccountId(accountId);
+        tx.setAmount(amount);
+        tx.setResultingBalance(resultingBalance);
+        tx.setDetails("Deposito desde Mercado Pago");
+        tx.setTimestamp(OffsetDateTime.now());
+        tx.setIdempotencyKey(idempotenceKey);
+
+        transactionRepository.save(tx);
+    }
+
     @Override
     public byte[] generateReceipt(Long id) {
         Transaction tx = transactionRepository.getById(id)
@@ -75,8 +91,14 @@ public class TransactionService implements TransactionServicePort {
         }
 
         // Si no es Admin, valido que la transaccion le pertenesca, ya sea como origen o contraparte
-        if (!transaction.getOriginAccountId().equals(accountId)
-                && !transaction.getCounterpartyAccountId().equals(accountId)) {
+        boolean isOrigin = transaction.getOriginAccountId() != null
+                && transaction.getOriginAccountId().equals(accountId);
+
+        boolean isCounterparty = transaction.getCounterpartyAccountId() != null
+                && transaction.getCounterpartyAccountId().equals(accountId);
+
+
+        if (!isOrigin && !isCounterparty) {
             throw new AccessDeniedException("La transaccion no pertenece al usuario.");
         }
 
@@ -87,7 +109,14 @@ public class TransactionService implements TransactionServicePort {
     public TransactionReceiptInfo getTransactionReceipt(Long transactionId, Long accountId, String role) {
         Transaction transaction = getById(transactionId, accountId, role);
 
-        TransactionAccountInfo originInfo = accountExternal.getAccountReceipt(transaction.getOriginAccountId());
+        TransactionAccountInfo originInfo;
+
+        if(transaction.getTransactionType() == Transaction.TransactionType.TRANSFER) {
+            originInfo = accountExternal.getAccountReceipt(transaction.getOriginAccountId());
+        } else {
+            originInfo = new TransactionAccountInfo("Mercado Pago", "-", "-");
+        }
+
         TransactionAccountInfo destinationInfo = accountExternal.getAccountReceipt(transaction.getCounterpartyAccountId());
 
         return new TransactionReceiptInfo(
@@ -123,5 +152,10 @@ public class TransactionService implements TransactionServicePort {
         Long accountId = accountExternal.getAccountIdByUserId(userId);
 
         return transactionRepository.getAllByAccountId(accountId, pageable);
+    }
+
+    @Override
+    public boolean existsByIdempotenceKey(String idempotenceKey) {
+        return transactionRepository.existsByIdempotenceKey(idempotenceKey);
     }
 }
