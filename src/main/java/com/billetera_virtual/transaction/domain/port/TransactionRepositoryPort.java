@@ -16,5 +16,5 @@ public interface TransactionRepositoryPort {
     Page<Transaction> findAll(Pageable pageable);
     Page<Transaction> getAllByAccountId(Long accountId, Pageable pageable);
     Optional<Transaction> findByIdempotencyKey(String idempotencyKey);
-
+    boolean existsByIdempotenceKey(String idempotenceKey);
 }

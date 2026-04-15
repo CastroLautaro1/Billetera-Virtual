@@ -3,9 +3,8 @@ package services;
 import com.billetera_virtual.account.application.AccountService;
 import com.billetera_virtual.account.domain.Account;
 import com.billetera_virtual.account.domain.port.AccountRepositoryPort;
-import com.billetera_virtual.exceptions.domain.EntityInactiveException;
-import com.billetera_virtual.exceptions.domain.InvalidAmountException;
-import com.billetera_virtual.exceptions.domain.InvalidRequestException;
+import com.billetera_virtual.account.domain.port.external.UserDataPort;
+import com.billetera_virtual.exceptions.domain.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,6 +23,9 @@ public class AccountServiceTest {
 
     @Mock
     private AccountRepositoryPort accountRepository;
+
+    @Mock
+    private UserDataPort userDataPort;
 
     @InjectMocks
     private AccountService accountService;
@@ -57,7 +59,7 @@ public class AccountServiceTest {
 
 
     @Test
-    void makeTransaction_ShouldThrowException_WhenAmountIsInvalid() {
+    void makeTransaction_ShouldThrowException_WhenOriginAccountIsDisable() {
         // Arrange
         Long originAccountId = 1L;
         Account disabledAccount = new Account(1L, null, null, null, new BigDecimal("100.00"), false);
@@ -68,7 +70,24 @@ public class AccountServiceTest {
         assertThrows(EntityInactiveException.class, () -> {
             accountService.makeTransaction(originAccountId, 2L, new BigDecimal("50.00"));
         });
+    }
 
+    @Test
+    void makeTransaction_ShouldThrowException_WhenDestinationAccountIsDisable() {
+        // Arrange
+        Long originAccountId = 1L;
+        Long destinationAccountId = 2L;
+        Account originAccount = new Account(1L, null, null, null, new BigDecimal("100.00"), true);
+        Account destinationAccount = new Account(destinationAccountId, 2L, null, null, new BigDecimal("100.00"), false);
+
+        // Act
+        when(accountRepository.getById(originAccountId)).thenReturn(Optional.of(originAccount));
+        when(accountRepository.getById(destinationAccountId)).thenReturn(Optional.of(destinationAccount));
+
+        // Assert
+        assertThrows(EntityInactiveException.class, () -> {
+            accountService.makeTransaction(originAccountId, destinationAccountId, new BigDecimal("20.00"));
+        });
     }
 
     @Test
@@ -106,5 +125,97 @@ public class AccountServiceTest {
             accountService.makeTransaction(1L, 2L, zeroAmount);
         });
     }
+
+    @Test
+    void makeTransaction_ShouldThrowException_WhenInsufficientBalance() {
+        // Arrange
+        Long accountId = 1L;
+        Account poorAccount = new Account(1L, null, null, null, new BigDecimal("100.00"), true);
+
+        // Act
+        when(accountRepository.getById(accountId)).thenReturn(Optional.of(poorAccount));
+
+        // Assert
+        assertThrows(InsufficientBalanceException.class, () -> {
+            accountService.makeTransaction(accountId, 2L, new BigDecimal("200.00"));
+        });
+    }
+
+    // ---- TESTS PARA EL METODO getAccountById ----
+    @Test
+    void getAccountById_ShouldReturnAccount_WhenIdIsValid() {
+        // Act
+        Long accountId = 1L;
+        Account account = new Account(accountId, 1L, null, null, new BigDecimal("100.00"), true);
+
+        when(accountRepository.getById(accountId)).thenReturn(Optional.of(account));
+
+        // Act
+        Account accountFound = accountService.getAccountById(accountId);
+
+        // Assert
+        assertEquals(accountFound.getId(), accountId);
+        assertEquals(accountFound.getUser_id(), account.getUser_id());
+        assertEquals(accountFound.getBalance(), account.getBalance());
+
+        verify(accountRepository, times(1)).getById(accountId);
+    }
+
+    @Test
+    void getAccountByIdUser_ShouldThrowException_WhenIdDoesNotExist() {
+        // Arrange
+        Long accountId = 99L;
+
+        when(accountRepository.getById(accountId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            accountService.getAccountById(accountId);
+        });
+
+        assertEquals("El ID ingresado no coincide con ninguna cuenta", exception.getMessage());
+
+        verify(accountRepository, times(1)).getById(accountId);
+    }
+
+    // ---- TESTS PARA EL METODO getAccountByIdUser ----
+
+    @Test
+    void getAccountByIdUser_ShouldReturnAccount_WhenUserIdIsValid() {
+        //Arrange
+        Long userId = 1L;
+
+        Account account = new Account(1L, userId, null, null, new BigDecimal("50.00"), true);
+
+        //Act
+        when(accountRepository.getByIdUser(userId)).thenReturn(Optional.of(account));
+        Account accountFound = accountService.getAccountByIdUser(userId);
+
+        //Assert
+        assertEquals(accountFound.getUser_id(), userId);
+        assertEquals(accountFound.getId(), account.getId());
+        assertEquals(accountFound.getBalance(), account.getBalance());
+
+        verify(accountRepository, times(1)).getByIdUser(userId);
+    }
+
+    @Test
+    void getAccountByIdUser_ShouldThrowException_WhenIdUserDoesNotExist() {
+        // Arrange
+        Long userId = 99L;
+
+        when(accountRepository.getByIdUser(userId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            accountService.getAccountByIdUser(userId);
+        });
+
+        assertEquals("El ID ingresado no coincide con ninguna cuenta", exception.getMessage());
+
+        verify(accountRepository, times(1)).getByIdUser(userId);
+    }
+
+    // ---- TESTS PARA EL METODO getAccountPublicData ----
 
 }

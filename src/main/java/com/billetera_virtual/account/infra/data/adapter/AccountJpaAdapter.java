@@ -71,13 +71,13 @@ public class AccountJpaAdapter implements AccountRepositoryPort {
 
     @Override
     public Optional<Account> getAccountByAlias(String alias) {
-        return jpaRepository.findByAlias(alias)
+        return jpaRepository.findByAliasAndStatusTrue(alias)
                 .map(accountMapper::toDomain);
     }
 
     @Override
     public Optional<Account> getAccountByCvu(String cvu) {
-        return jpaRepository.findByCvu(cvu)
+        return jpaRepository.findByCvuAndStatusTrue(cvu)
                 .map(accountMapper::toDomain);
     }
 

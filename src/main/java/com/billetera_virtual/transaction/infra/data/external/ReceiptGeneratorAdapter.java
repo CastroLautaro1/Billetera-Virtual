@@ -1,9 +1,7 @@
 package com.billetera_virtual.transaction.infra.data.external;
 
-import com.billetera_virtual.account.domain.dto.AccountPublicDataResponse;
 import com.billetera_virtual.transaction.domain.Transaction;
 import com.billetera_virtual.transaction.domain.dto.TransactionAccountInfo;
-import com.billetera_virtual.transaction.domain.port.external.AccountExternalPort;
 import com.billetera_virtual.transaction.domain.port.external.ReceiptGeneratorPort;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;

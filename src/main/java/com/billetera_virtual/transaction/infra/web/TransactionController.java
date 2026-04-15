@@ -2,6 +2,7 @@ package com.billetera_virtual.transaction.infra.web;
 
 import com.billetera_virtual.security.infra.model.UserPrincipal;
 import com.billetera_virtual.transaction.domain.Transaction;
+import com.billetera_virtual.transaction.domain.dto.TransactionReceiptInfo;
 import com.billetera_virtual.transaction.domain.port.TransactionServicePort;
 import com.billetera_virtual.transaction.infra.web.dto.TransactionDTO;
 import com.billetera_virtual.transaction.infra.web.mapper.TransactionMapperWeb;
@@ -98,6 +99,16 @@ public class TransactionController {
             @AuthenticationPrincipal UserPrincipal principal) {
         Transaction transaction = transactionService.getById(id, principal.getAccountId(), String.valueOf(principal.getRole()));
         return ResponseEntity.ok(transaction);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/info/{id}")
+    public ResponseEntity<TransactionReceiptInfo> getTransactionReceipt(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        TransactionReceiptInfo transactionReceipt = transactionService.getTransactionReceipt(id, principal.getAccountId(), String.valueOf(principal.getRole()));
+        return ResponseEntity.ok(transactionReceipt);
     }
 
     @Operation(

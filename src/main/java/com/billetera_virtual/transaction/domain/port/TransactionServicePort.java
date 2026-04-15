@@ -2,15 +2,18 @@ package com.billetera_virtual.transaction.domain.port;
 
 import com.billetera_virtual.transaction.domain.Transaction;
 import com.billetera_virtual.transaction.domain.dto.TransactionAccountInfo;
+import com.billetera_virtual.transaction.domain.dto.TransactionReceiptInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
 
 public interface TransactionServicePort {
 
     Transaction makeTransaction(Transaction t, String destination, Long userId, String idempotenceKey);
+    void createDeposit(Long accountId, BigDecimal amount, BigDecimal resultingBalance, String idempotenceKey);
     byte [] generateReceipt(Long id);
 
     Transaction getById(Long id, Long accountId, String role);
@@ -18,5 +21,7 @@ public interface TransactionServicePort {
                                  OffsetDateTime start, OffsetDateTime end, String name, Pageable pageable);
     Page<Transaction> getAllTransactions(Pageable pageable);
     Page<Transaction> getAllByUserId(Long userId, Pageable pageable);
+    TransactionReceiptInfo getTransactionReceipt(Long transactionId, Long accountId, String role);
+    boolean existsByIdempotenceKey(String idempotenceKey);
 
 }

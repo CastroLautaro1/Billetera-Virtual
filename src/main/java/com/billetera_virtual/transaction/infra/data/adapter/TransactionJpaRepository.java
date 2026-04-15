@@ -67,4 +67,5 @@ public interface TransactionJpaRepository extends JpaRepository<TransactionEntit
 
     Optional<TransactionEntity> findByIdempotencyKey(String idempotencyKey);
 
+    boolean existsByIdempotencyKey(String idempotenceKey);
 }

@@ -59,4 +59,9 @@ public class TransactionJpaAdapter implements TransactionRepositoryPort {
         return jpaRepository.findByIdempotencyKey(idempotencyKey)
                 .map(transactionMapper::toDomain);
     }
+
+    @Override
+    public boolean existsByIdempotenceKey(String idempotenceKey) {
+        return jpaRepository.existsByIdempotencyKey(idempotenceKey);
+    }
 }

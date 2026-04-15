@@ -12,8 +12,8 @@ public interface AccountJpaRepository extends JpaRepository<AccountEntity, Long>
     boolean existsByUserId(Long userId);
     boolean existsByAlias(String alias);
     Optional<AccountEntity> findByUserId(Long userId);
-    Optional<AccountEntity> findByAlias(String alias);
-    Optional<AccountEntity> findByCvu(String cvu);
+    Optional<AccountEntity> findByAliasAndStatusTrue(String alias);
+    Optional<AccountEntity> findByCvuAndStatusTrue(String cvu);
     @Modifying
     @Query("update AccountEntity a set a.status = false where a.id = :id")
     void logicallyDeleteById(@Param("id") Long id);

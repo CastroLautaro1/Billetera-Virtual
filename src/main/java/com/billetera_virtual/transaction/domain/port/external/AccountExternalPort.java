@@ -18,5 +18,5 @@ public interface AccountExternalPort {
     // Obtengo la información de una cuenta mediante su Id (nombre completo + alias y cvu)
     TransactionAccountInfo getAccountDataById(Long accountId);
 
-
+    TransactionAccountInfo getAccountReceipt(Long accountId);
 }
