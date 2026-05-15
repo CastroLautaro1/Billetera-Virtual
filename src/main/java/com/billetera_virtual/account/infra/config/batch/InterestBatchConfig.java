@@ -26,9 +26,7 @@ public class InterestBatchConfig {
     public RepositoryItemReader<AccountEntity> accountItemReader(AccountJpaRepository repository) {
         RepositoryItemReader<AccountEntity> reader = new RepositoryItemReader<>();
         reader.setRepository(repository);
-        // Suponiendo que tenés un método en tu repositorio para traer todas las cuentas
-        // Si no lo tenés, podés crear uno simple como List<AccountEntity> findAll()
-        reader.setMethodName("findAll");
+        reader.setMethodName("findByStatusTrue");
         reader.setSort(Collections.singletonMap("id", Sort.Direction.ASC));
         reader.setPageSize(100);
         return reader;
