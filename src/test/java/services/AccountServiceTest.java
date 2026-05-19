@@ -327,6 +327,68 @@ public class AccountServiceTest {
         assertEquals("No puedes realizar una transferencia a tu propia cuenta", exception.getMessage());
     }
 
+    // ---- TESTS PARA EL METODO getAccountPublicDataById ----
+    @Test
+    void getAccountPublicDataById_ShouldSuccess_WhenDataIsValid() {
+        // Arrange
+        Account account = new Account(1L, 1L, null, "alias", null, true);
+        UserDataDTO mockUserData = new UserDataDTO("Juan", "Perez");
+        Long accountId = 1L;
 
+        when(accountRepository.getById(accountId)).thenReturn(Optional.of(account));
+        when(userDataPort.getUserDataById(account.getUser_id())).thenReturn(mockUserData);
+
+        // Act
+        AccountPublicDataResponse accountData = accountService.getAccountPublicDataById(accountId);
+
+        // Assert
+        assertEquals(account.getId(), accountData.accountId());
+        assertEquals(mockUserData.firstname(), accountData.firstname());
+        assertEquals(mockUserData.lastname(), accountData.lastname());
+        assertEquals(account.getAlias(), accountData.alias());
+
+        verify(accountRepository, times(1)).getById(accountId);
+        verify(userDataPort, times(1)).getUserDataById(account.getUser_id());
+    }
+
+    @Test
+    void getAccountPublicDataById_ShouldThrowException_WhenAccountIsDisable() {
+        Account account = new Account(1L, 1L, null, "alias", null, false);
+        Long accountId = 1L;
+
+        when(accountRepository.getById(accountId)).thenReturn(Optional.of(account));
+
+        // Act & Assert
+        EntityInactiveException exception = assertThrows(EntityInactiveException.class, () -> {
+            accountService.getAccountPublicDataById(accountId);
+        });
+
+        assertEquals("La cuenta se encuentra dada de baja.", exception.getMessage());
+
+        verify(accountRepository, times(1)).getById(accountId);
+    }
+
+    @Test
+    void getAccountPublicDataById_ShouldThrowException_WhenUserNotFound() {
+        // Arrange
+        Account account = new Account(1L, 1L, null, "alias", null, true);
+        Long accountId = 1L;
+        Long userId = 1L;
+
+        when(accountRepository.getById(accountId)).thenReturn(Optional.of(account));
+        when(userDataPort.getUserDataById(userId)).thenThrow(
+                new EntityNotFoundException("No se encontró el usuario con ID: " + userId)
+        );
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            accountService.getAccountPublicDataById(accountId);
+        });
+
+        assertEquals("No se encontró el usuario con ID: " + userId, exception.getMessage());
+
+        verify(accountRepository, times(1)).getById(accountId);
+        verify(userDataPort, times(1)).getUserDataById(userId);
+    }
 
 }
