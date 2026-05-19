@@ -219,7 +219,7 @@ public class AccountServiceTest {
 
     // ---- TESTS PARA EL METODO getAccountPublicData ----
     @Test
-    void getAccountPublicData_shouldSuccess_whenDataIsValid() {
+    void getAccountPublicData_ShouldSuccess_WhenDataIsValid() {
         // Arrange
         String identifier = "alias";
         Long authenticatedAccountId = 1L;
@@ -251,7 +251,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    void getAccountPublicData_shouldThrowException_whenAliasHasNoCoincidence() {
+    void getAccountPublicData_ShouldThrowException_WhenAliasHasNoCoincidence() {
         // Arrange
         String identifier = "unexistent";
         Long authenticatedAccountId = 1L;
@@ -269,7 +269,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    void getAccountPublicData_shouldThrowException_whenCVUHasNoCoincidence() {
+    void getAccountPublicData_ShouldThrowException_WhenCVUHasNoCoincidence() {
         // Arrange
         String identifier = "0000000000000000000000";
         Long authenticatedAccountId = 1L;
@@ -285,5 +285,48 @@ public class AccountServiceTest {
 
         verify(accountRepository, times(1)).getAccountByCvu(identifier);
     }
+
+    @Test
+    void getAccountPublicData_ShouldThrowException_WhenAccountIsDisable() {
+        // Arrange
+        Account account = new Account(2L, 2L, null, "alias", null, false);
+        String identifier = "alias";
+        Long destinationId = 2L;
+        Long authenticatedAccountId = 1L;
+
+        when(accountRepository.getAccountByAlias(identifier)).thenReturn(Optional.of(account));
+        when(accountRepository.getById(destinationId)).thenReturn(Optional.of(account));
+
+        // Act & Assert
+        EntityInactiveException exception = assertThrows(EntityInactiveException.class, () -> {
+            accountService.getAccountPublicData(identifier, authenticatedAccountId);
+        });
+
+        assertEquals("La cuenta buscada se encuentra deshabilitada.", exception.getMessage());
+
+        verify(accountRepository, times(1)).getById(destinationId);
+
+    }
+
+    @Test
+    void getAccountPublicData_ShouldThrowException_WhenAccountIsAutoSearch() {
+        // Arrange
+        Account account = new Account(1L, 1L, null, "alias", null, true);
+        String identifier = "alias";
+        Long destinationId = 1L;
+        Long authenticatedAccountId = 1L;
+
+        when(accountRepository.getAccountByAlias(identifier)).thenReturn(Optional.of(account));
+        when(accountRepository.getById(destinationId)).thenReturn(Optional.of(account));
+
+        // Act & Assert
+        InvalidRequestException exception = assertThrows(InvalidRequestException.class, () -> {
+            accountService.getAccountPublicData(identifier, authenticatedAccountId);
+        });
+
+        assertEquals("No puedes realizar una transferencia a tu propia cuenta", exception.getMessage());
+    }
+
+
 
 }
