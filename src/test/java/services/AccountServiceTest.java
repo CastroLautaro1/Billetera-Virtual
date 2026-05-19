@@ -250,4 +250,40 @@ public class AccountServiceTest {
 
     }
 
+    @Test
+    void getAccountPublicData_shouldThrowException_whenAliasHasNoCoincidence() {
+        // Arrange
+        String identifier = "unexistent";
+        Long authenticatedAccountId = 1L;
+
+        when(accountRepository.getAccountByAlias(identifier)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            accountService.getAccountPublicData(identifier, authenticatedAccountId);
+        });
+
+        assertEquals("El alias no coincide con ninguna Cuenta", exception.getMessage());
+
+        verify(accountRepository, times(1)).getAccountByAlias(identifier);
+    }
+
+    @Test
+    void getAccountPublicData_shouldThrowException_whenCVUHasNoCoincidence() {
+        // Arrange
+        String identifier = "0000000000000000000000";
+        Long authenticatedAccountId = 1L;
+
+        when(accountRepository.getAccountByCvu(identifier)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            accountService.getAccountPublicData(identifier, authenticatedAccountId);
+        });
+
+        assertEquals("CVU no encontrado", exception.getMessage());
+
+        verify(accountRepository, times(1)).getAccountByCvu(identifier);
+    }
+
 }
