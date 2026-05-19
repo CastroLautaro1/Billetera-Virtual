@@ -391,4 +391,68 @@ public class AccountServiceTest {
         verify(userDataPort, times(1)).getUserDataById(userId);
     }
 
+    // --- TESTS PARA EL METODO getAccountReceipt ---
+    @Test
+    void getAccountReceipt_ShoudlSuccess_WhenDataIsValid() {
+        // Arrange
+        Account account = new Account(1L, 1L, null, "alias", null, true);
+        UserDataDTO mockUserData = new UserDataDTO("User", "Test");
+        Long accountId = 1L;
+
+        when(accountRepository.getById(accountId)).thenReturn(Optional.of(account));
+        when(userDataPort.getUserDataById(account.getUser_id())).thenReturn(mockUserData);
+
+        // Act
+        AccountPublicDataResponse accountData = accountService.getAccountReceipt(accountId);
+
+        // Assert
+        assertEquals(accountData.accountId(), accountId);
+        assertEquals(accountData.firstname(), mockUserData.firstname());
+        assertEquals(accountData.lastname(), mockUserData.lastname());
+        assertEquals(accountData.alias(), account.getAlias());
+        assertEquals(accountData.cvu(), account.getCvu());
+
+        verify(accountRepository, times(1)).getById(accountId);
+        verify(userDataPort, times(1)).getUserDataById(account.getUser_id());
+    }
+
+    @Test
+    void getAccountReceipt_ShouldThrowException_WhenAccountNotFound() {
+        // Arrange
+        Long accountId = 1L;
+
+        when(accountRepository.getById(accountId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            accountService.getAccountReceipt(accountId);
+        });
+
+        assertEquals("El ID ingresado no coincide con ninguna cuenta", exception.getMessage());
+
+        verify(accountRepository, times(1)).getById(accountId);
+    }
+
+    @Test
+    void getAccountReceipt_ShouldThrowException_WhenUserNotFound() {
+        // Arrange
+        Account account = new Account(1L, 1L, null, "alias", null, true);
+        Long accountId = 1L;
+        Long userId = 1L;
+
+        when(accountRepository.getById(accountId)).thenReturn(Optional.of(account));
+        when(userDataPort.getUserDataById(userId)).thenThrow(
+                new EntityNotFoundException("No se encontró el usuario con ID: " + userId)
+        );
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            accountService.getAccountReceipt(accountId);
+        });
+
+        assertEquals("No se encontró el usuario con ID: " + userId, exception.getMessage());
+
+        verify(accountRepository, times(1)).getById(accountId);
+        verify(userDataPort, times(1)).getUserDataById(userId);
+    }
 }
