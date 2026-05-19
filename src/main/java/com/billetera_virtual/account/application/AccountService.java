@@ -131,8 +131,8 @@ public class AccountService implements AccountServicePort {
                 account.getId(),
                 data.firstname(),
                 data.lastname(),
-                account.getCvu(),
-                account.getAlias());
+                account.getAlias(),
+                account.getCvu());
     }
 
     // Devuelve la informacion de una cuenta, solo si esta activa
