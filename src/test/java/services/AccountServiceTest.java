@@ -2,6 +2,8 @@ package services;
 
 import com.billetera_virtual.account.application.AccountService;
 import com.billetera_virtual.account.domain.Account;
+import com.billetera_virtual.account.domain.dto.AccountPublicDataResponse;
+import com.billetera_virtual.account.domain.dto.UserDataDTO;
 import com.billetera_virtual.account.domain.port.AccountRepositoryPort;
 import com.billetera_virtual.account.domain.port.external.UserDataPort;
 import com.billetera_virtual.exceptions.domain.*;
@@ -14,8 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -217,5 +218,36 @@ public class AccountServiceTest {
     }
 
     // ---- TESTS PARA EL METODO getAccountPublicData ----
+    @Test
+    void getAccountPublicData_shouldSuccess_whenDataIsValid() {
+        // Arrange
+        String identifier = "alias";
+        Long authenticatedAccountId = 1L;
+        Long destinationId = 2L;
+        Long userId = 10L;
+
+        Account account = new Account(destinationId, userId, null, "alias", null, true);
+        UserDataDTO mockUserData = new UserDataDTO("User", "Test");
+
+        when(accountRepository.getAccountByAlias(identifier)).thenReturn(Optional.of(account));
+        when(accountRepository.getById(destinationId)).thenReturn(Optional.of(account));
+        when(userDataPort.getUserDataById(userId)).thenReturn(mockUserData);
+
+        // Act
+        AccountPublicDataResponse accountResponse = accountService.getAccountPublicData(identifier, authenticatedAccountId);
+
+        // Assert
+        assertNotNull(accountResponse, "La respuesta no deberia ser nula");
+        assertEquals(destinationId, accountResponse.accountId());
+        assertEquals("User", accountResponse.firstname());
+        assertEquals("Test", accountResponse.lastname());
+        assertEquals("alias", accountResponse.alias());
+        assertEquals(null, accountResponse.cvu());
+
+        verify(accountRepository, times(1)).getAccountByAlias(identifier);
+        verify(accountRepository, times(1)).getById(destinationId);
+        verify(userDataPort, times(1)).getUserDataById(userId);
+
+    }
 
 }
