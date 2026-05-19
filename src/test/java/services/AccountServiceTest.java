@@ -455,4 +455,116 @@ public class AccountServiceTest {
         verify(accountRepository, times(1)).getById(accountId);
         verify(userDataPort, times(1)).getUserDataById(userId);
     }
+
+    // --- TESTS PARA EL METODO getAccountByAlias
+    @Test
+    void getAccountByAlias_ShouldSuccess_WhenDataIsValid() {
+        // Arrange
+        Account mockAccount = new Account(1L, 1L, null, "alias", null, true);
+        String alias = "alias";
+
+        when(accountRepository.getAccountByAlias(alias)).thenReturn(Optional.of(mockAccount));
+
+        // Act
+        Account account = accountService.getAccountByAlias(alias);
+
+        // Assert
+        assertEquals(mockAccount.getId(), account.getId());
+        assertEquals(mockAccount.getUser_id(), account.getUser_id());
+        assertEquals(mockAccount.getAlias(), account.getAlias());
+        assertEquals(mockAccount.isStatus(), account.isStatus());
+
+        verify(accountRepository, times(1)).getAccountByAlias(alias);
+    }
+
+    @Test
+    void getAccountByAlias_ShouldThrowException_WhenAccountNotFound() {
+        // Arrange
+        String alias = "unexistent";
+
+        when(accountRepository.getAccountByAlias(alias)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            accountService.getAccountByAlias(alias);
+        });
+
+        assertEquals("El alias no coincide con ninguna Cuenta", exception.getMessage());
+
+        verify(accountRepository, times(1)).getAccountByAlias(alias);
+    }
+
+    // --- TESTS PARA EL METODO getAccountByCVU
+    @Test
+    void getAccountByCVU_ShouldSuccess_WhenDataIsValid() {
+        // Arrange
+        Account mockAccount = new Account(1L, 1L, "0000000000000000123456", null, null, true);
+        String cvu = "0000000000000000123456";
+
+        when(accountRepository.getAccountByCvu(cvu)).thenReturn(Optional.of(mockAccount));
+
+        // Act
+        Account account = accountService.getAccountByCvu(cvu);
+
+        // Assert
+        assertEquals(mockAccount.getId(), account.getId());
+        assertEquals(mockAccount.getUser_id(), account.getUser_id());
+        assertEquals(mockAccount.getCvu(), account.getCvu());
+        assertEquals(mockAccount.isStatus(), account.isStatus());
+
+        verify(accountRepository, times(1)).getAccountByCvu(cvu);
+    }
+
+    @Test
+    void getAccountByCVU_ShouldThrowException_WhenAccountNotFound() {
+        // Arrange
+        String cvu = "0000000000000000123456";
+
+        when(accountRepository.getAccountByCvu(cvu)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            accountService.getAccountByCvu(cvu);
+        });
+
+        assertEquals("El CVU no coincide con ninguna Cuenta", exception.getMessage());
+
+        verify(accountRepository, times(1)).getAccountByCvu(cvu);
+    }
+
+    // --- TESTS PARA EL METODO getAccountIdByAlias
+    @Test
+    void getAccountIdByAlias_ShouldSuccess_WhenDataIsValid() {
+        // Arrange
+        Account mockAccount = new Account(1L, 1L, null, "alias", null, true);
+        Long accountId = 1L;
+        String alias = "alias";
+
+        when(accountRepository.getAccountByAlias(alias)).thenReturn(Optional.of(mockAccount));
+
+        // Act
+        Long accountIdResponse = accountService.getAccountIdByAlias(alias);
+
+        // Assert
+        assertEquals(accountIdResponse, accountId);
+
+        verify(accountRepository, times(1)).getAccountByAlias(alias);
+    }
+
+    @Test
+    void getAccountIdByAlias_ShouldThrowException_WhenAccountNotFound() {
+        // Arrange
+        String alias = "unexistent";
+
+        when(accountRepository.getAccountByAlias(alias)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            accountService.getAccountIdByAlias(alias);
+        });
+
+        assertEquals("El alias no coincide con ninguna Cuenta", exception.getMessage());
+
+        verify(accountRepository, times(1)).getAccountByAlias(alias);
+    }
 }
