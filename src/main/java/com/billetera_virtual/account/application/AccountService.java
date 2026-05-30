@@ -237,7 +237,7 @@ public class AccountService implements AccountServicePort {
             throw new EntityAlreadyExistsException("El alias ingresado no esta disponible");
         }
 
-        account.setAlias(alias);
+        account.setAlias(cleanAlias);
 
         accountRepository.save(account);
     }
