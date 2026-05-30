@@ -7,7 +7,6 @@ import com.billetera_virtual.account.domain.dto.UserDataDTO;
 import com.billetera_virtual.account.domain.port.AccountRepositoryPort;
 import com.billetera_virtual.account.domain.port.external.UserDataPort;
 import com.billetera_virtual.exceptions.domain.*;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -641,7 +641,41 @@ public class AccountServiceTest {
     }
 
     // --- TESTS PARA EL METODO getAll
-    // No se como probarlo
+    @Test
+    void getAll_ShouldReturnListOfAccounts_WhenAccountsExists() {
+        // Arrange
+        Account account1 = new Account(1L, 1L, null, "alias1", null, true);
+        Account account2= new Account(2L, 2L, null, "alias2", null, true);
+
+        List<Account> mockAccountList = List.of(account1, account2);
+
+        when(accountRepository.findAll()).thenReturn(mockAccountList);
+
+        // Act
+        List<Account> result = accountService.getAll();
+
+        // Assert
+        assertNotNull(result, "La lista no deberia ser nula");
+        assertEquals(2, result.size());
+        assertEquals(result, mockAccountList);
+
+        verify(accountRepository, times(1)).findAll();
+    }
+
+    @Test
+    void getAll_ShoudlReturnEmptyList_WhenNoAccountsExists() {
+        // Arrange
+        when(accountRepository.findAll()).thenReturn(List.of());
+
+        // Act
+        List<Account> result = accountService.getAll();
+
+        // Assert
+        assertNotNull(result, "La lista no deberia estar nula, si no vacia");
+        assertTrue(result.isEmpty(), "La lista deberia estar vacia");
+
+        verify(accountRepository, times(1)).findAll();
+    }
 
     // --- TESTS PARA EL METODO logicallyDeleteById
     @Test
