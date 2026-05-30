@@ -23,7 +23,6 @@ public interface AccountServicePort {
     Long getAccountIdByAlias(String alias);
     Long getAccountIdByDestination(String destination);
 
-    Account updateAccount(Long id, BigDecimal balance);
     void updateAlias(Long id, String alias);
 
     void logicallyDeleteById(Long id);

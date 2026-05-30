@@ -193,32 +193,11 @@ public class AccountService implements AccountServicePort {
     public void logicallyDeleteById(Long id) {
         boolean exists = accountRepository.existsById(id);
 
-        if(exists) {
+        if (exists) {
             accountRepository.logicallyDeleteById(id);
-        }
-        else {
+        } else {
             throw new EntityNotFoundException("El ID ingresado no coincide con ninguna cuenta");
         }
-    }
-
-    @Override
-    public Account updateAccount(Long id, BigDecimal balance) {
-
-        // hacer validacion que verifique que el ID pertenece al Usuario logueado
-
-        Account account = getAccountById(id);
-
-        if (!account.isStatus()) {
-            throw new EntityInactiveException("La cuenta se encuentra inhabilitada");
-        }
-
-        if(balance.compareTo(BigDecimal.ZERO) < 0) {
-            throw new InsufficientBalanceException("El saldo de la cuenta no puede ser inferior a 0");
-        }
-
-        account.setBalance(balance);
-
-        return accountRepository.save(account);
     }
 
     @Override
