@@ -567,4 +567,78 @@ public class AccountServiceTest {
 
         verify(accountRepository, times(1)).getAccountByAlias(alias);
     }
+
+    // --- TESTS PARA EL METODO getAccountIdByDestination
+    @Test
+    void getAccountIdByDestination_ShouldSuccess_WhenAliasIsValid() {
+        // Arrange
+        Long accountId = 1L;
+        Account mockAccount = new Account(1L, 1L, null, "alias", null, true);
+        String alias = "alias";
+
+        when(accountRepository.getAccountByAlias(alias)).thenReturn(Optional.of(mockAccount));
+
+        // Act
+        Long accountIdResponse = accountService.getAccountIdByDestination(alias);
+
+        // Assert
+        assertEquals(accountId, accountIdResponse);
+
+        verify(accountRepository, times(1)).getAccountByAlias(alias);
+    }
+
+    @Test
+    void getAccountIdByDestination_ShouldSuccess_WhenCvuIsValid() {
+        // Arrange
+        Long accountId = 1L;
+        Account mockAccount = new Account(1L, 1L, "0000000000000000123456", "alias", null, true);
+        String cvu = "0000000000000000123456";
+
+        when(accountRepository.getAccountByCvu(cvu)).thenReturn(Optional.of(mockAccount));
+
+        // Act
+        Long accountIdResponse = accountService.getAccountIdByDestination(cvu);
+
+        // Assert
+        assertEquals(accountId, accountIdResponse);
+
+        verify(accountRepository, times(1)).getAccountByCvu(cvu);
+    }
+
+    @Test
+    void getAccountIdByDestination_ShouldThrowException_WhenAccountNotFound() {
+        // Arrange
+        String alias = "unexistent";
+
+        when(accountRepository.getAccountByAlias(alias)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            accountService.getAccountIdByDestination(alias);
+        });
+
+        assertEquals(exception.getMessage(), "El alias no coincide con ninguna Cuenta");
+
+        verify(accountRepository, times(1)).getAccountByAlias(alias);
+    }
+
+    @Test
+    void getAccountIdByDestination_ShouldThrowException_WhenCvuNotFound() {
+        // Arrange
+        String cvu = "0000000000000000123456";
+
+        when(accountRepository.getAccountByCvu(cvu)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            accountService.getAccountIdByDestination(cvu);
+        });
+
+        assertEquals(exception.getMessage(), "CVU no encontrado");
+
+        verify(accountRepository, times(1)).getAccountByCvu(cvu);
+    }
+
+    // --- TESTS PARA EL METODO getAll
+    // No se como probarlo
 }
