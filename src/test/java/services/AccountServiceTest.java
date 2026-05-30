@@ -7,6 +7,7 @@ import com.billetera_virtual.account.domain.dto.UserDataDTO;
 import com.billetera_virtual.account.domain.port.AccountRepositoryPort;
 import com.billetera_virtual.account.domain.port.external.UserDataPort;
 import com.billetera_virtual.exceptions.domain.*;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -675,5 +676,87 @@ public class AccountServiceTest {
 
         verify(accountRepository, times(1)).existsById(accountId);
         verify(accountRepository, never()).logicallyDeleteById(anyLong());
+    }
+
+    // --- TESTS PARA EL METODO updateAlias
+    @Test
+    void accountAlias_ShouldSuccess_WhenDataIsValid() {
+        // Arrange
+        Long idUser = 1L;
+        String alias = "new.alias";
+        Account mockAccount = new Account(1L, 1L, null, "alias", null, true);
+
+        when(accountRepository.getByIdUser(idUser)).thenReturn(Optional.of(mockAccount));
+        when(accountRepository.existsByAlias(alias)).thenReturn(false);
+
+        // Act
+        accountService.updateAlias(idUser, alias);
+
+        // Assert
+        assertEquals("new.alias", mockAccount.getAlias());
+        verify(accountRepository, times(1)).getByIdUser(idUser);
+        verify(accountRepository, times(1)).existsByAlias(alias);
+        verify(accountRepository, times(1)).save(mockAccount);
+    }
+
+    @Test
+    void accountAlias_ShouldThrowException_WhenAccountNotFound() {
+        // Arrange
+        Long idUser = 1L;
+        String alias = "alias";
+
+        when(accountRepository.getByIdUser(idUser)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            accountService.updateAlias(idUser, alias);
+        });
+
+        assertEquals(exception.getMessage(), "El ID ingresado no coincide con ninguna cuenta");
+
+        verify(accountRepository, times(1)).getByIdUser(idUser);
+        verify(accountRepository, never()).save(any());
+    }
+
+    @Test
+    void accountAlias_ShouldThrowException_WhenAliasIsTheSame() {
+        // Arrange
+        Long idUser = 1L;
+        String alias = "same.alias";
+        Account mockAccount = new Account(1L, 1L, null, "same.alias", null, true);
+
+        when(accountRepository.getByIdUser(idUser)).thenReturn(Optional.of(mockAccount));
+
+        // Act & Assert
+        InvalidRequestException exception = assertThrows(InvalidRequestException.class, () -> {
+            accountService.updateAlias(idUser, alias);
+        });
+
+        assertEquals(exception.getMessage(), "El alias ingresado es igual al actual");
+
+        verify(accountRepository, times(1)).getByIdUser(idUser);
+        verify(accountRepository, never()).save(any());
+    }
+
+    @Test
+    void accountAlias_ShouldThrowException_WhenAliasAlreadyExists() {
+        // Arrange
+        Long idUser = 1L;
+        String alias = "already.exists";
+        Account mockAccount = new Account(1L, 1L, null, "alias", null, true);
+
+        when(accountRepository.getByIdUser(idUser)).thenReturn(Optional.of(mockAccount));
+        when(accountRepository.existsByAlias(alias)).thenReturn(true);
+
+        // Act & Assert
+        EntityAlreadyExistsException exception = assertThrows(EntityAlreadyExistsException.class, () -> {
+            accountService.updateAlias(idUser, alias);
+        });
+
+        assertEquals(exception.getMessage(), "El alias ingresado no esta disponible");
+
+        verify(accountRepository, times(1)).getByIdUser(idUser);
+        verify(accountRepository, times(1)).existsByAlias(alias);
+        verify(accountRepository, never()).save(any());
     }
 }
