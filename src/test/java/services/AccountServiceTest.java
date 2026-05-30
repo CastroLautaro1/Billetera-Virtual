@@ -641,4 +641,39 @@ public class AccountServiceTest {
 
     // --- TESTS PARA EL METODO getAll
     // No se como probarlo
+
+    // --- TESTS PARA EL METODO logicallyDeleteById
+    @Test
+    void logicallyDeleteById_ShouldSuccess_WhenDataIsValid() {
+        // Arrange
+        Long accountId = 1L;
+
+        when(accountRepository.existsById(accountId)).thenReturn(true);
+
+        // Act
+        accountService.logicallyDeleteById(accountId);
+
+        // Assert
+        verify(accountRepository, times(1)).existsById(accountId);
+
+        verify(accountRepository, times(1)).logicallyDeleteById(accountId);
+    }
+
+    @Test
+    void logicallyDeleteById_ShouldThrowException_WhenAccountNotFound() {
+        // Arrange
+        Long accountId = 1L;
+
+        when(accountRepository.existsById(accountId)).thenReturn(false);
+
+        // Act & Assert
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            accountService.logicallyDeleteById(accountId);
+        });
+
+        assertEquals(exception.getMessage(), "El ID ingresado no coincide con ninguna cuenta");
+
+        verify(accountRepository, times(1)).existsById(accountId);
+        verify(accountRepository, never()).logicallyDeleteById(anyLong());
+    }
 }
